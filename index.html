@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ALT//TAB — Competitive Reaction Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090b;--surface:#111318;--surface-2:#181b22;--surface-3:#1f232c;
+  --border:#262a34;--text:#e8eaed;--text-muted:#8b919e;
+  --accent:#00ff9d;--accent-dim:rgba(0,255,157,.12);--accent-blue:#00c2ff;
+  --danger:#ff4d6a;--warning:#ffb020;
+  --radius:12px;--radius-sm:8px;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --font-display:'Orbitron','Inter',sans-serif;
+  --transition:.2s ease;
+}
+html{font-size:16px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.hidden{display:none!important}
+.auth-screen{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 0%,#0e1a18 0%,var(--bg) 70%);z-index:1000;padding:1rem}
+.auth-card{width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.logo{font-family:var(--font-display);font-size:2rem;font-weight:900;letter-spacing:.04em;text-align:center;color:var(--text)}
+.logo span{color:var(--accent)}
+.tagline{text-align:center;color:var(--text-muted);font-size:.875rem;margin-top:.5rem;margin-bottom:2rem}
+.auth-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;background:var(--surface-2);border-radius:var(--radius-sm);padding:.25rem}
+.auth-tab{flex:1;padding:.6rem;border:none;background:transparent;color:var(--text-muted);font-weight:600;font-size:.875rem;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition)}
+.auth-tab.active{background:var(--surface-3);color:var(--text)}
+.auth-form{display:flex;flex-direction:column;gap:.75rem}
+.auth-form input{width:100%;padding:.8rem 1rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.95rem;outline:none;transition:var(--transition)}
+.auth-form input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1.5rem;background:var(--accent);color:#03110b;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.95rem;cursor:pointer;transition:var(--transition);font-family:inherit}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-lg{padding:1rem 2.5rem;font-size:1.1rem}
+.btn-sm{padding:.5rem 1rem;font-size:.85rem}
+.btn-ghost{padding:.6rem 1rem;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.85rem;cursor:pointer;transition:var(--transition);font-family:inherit}
+.btn-ghost:hover{border-color:var(--text-muted);color:var(--text)}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:.75rem;width:100%;padding:.8rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-weight:600;font-size:.9rem;cursor:pointer;transition:var(--transition);font-family:inherit}
+.btn-google:hover{background:var(--surface-3)}
+.divider{display:flex;align-items:center;gap:1rem;margin:1.25rem 0;color:var(--text-muted);font-size:.8rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.error-msg{color:var(--danger);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.app{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:1.5rem 1rem;position:sticky;top:0;height:100vh;flex-shrink:0}
+.sidebar-brand{padding:0 .5rem 1.5rem}
+.logo-small{font-family:var(--font-display);font-size:1.1rem;font-weight:800;letter-spacing:.06em}
+.logo-small span{color:var(--accent)}
+.nav{display:flex;flex-direction:column;gap:.25rem;flex:1}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.7rem .85rem;background:transparent;border:none;border-radius:var(--radius-sm);color:var(--text-muted);font-size:.9rem;font-weight:500;text-align:left;cursor:pointer;transition:var(--transition);font-family:inherit}
+.nav-item:hover{background:var(--surface-2);color:var(--text)}
+.nav-item.active{background:var(--accent-dim);color:var(--accent)}
+.nav-icon{font-size:1rem;width:20px;text-align:center}
+.sidebar-footer{border-top:1px solid var(--border);padding-top:1rem;margin-top:1rem}
+.sidebar-user{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.avatar-sm{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--surface-3);border:1px solid var(--border)}
+.sidebar-username{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.sidebar-level{font-size:.75rem;color:var(--accent)}
+.main{flex:1;padding:2rem 2.5rem;overflow-y:auto;max-width:1200px}
+.section{display:none;animation:fadeIn .3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section-title{font-family:var(--font-display);font-size:1.6rem;font-weight:800;letter-spacing:.03em;margin-bottom:.25rem}
+.section-sub{color:var(--text-muted);font-size:.9rem;margin-bottom:1.75rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:var(--transition)}
+.stat-card:hover{border-color:var(--accent)}
+.stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+.stat-value{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--accent)}
+.stat-unit{font-size:.75rem;color:var(--text-muted)}
+.xp-bar-wrap{margin-bottom:1.5rem}
+.xp-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--text-muted);margin-bottom:.4rem}
+.xp-bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-blue));border-radius:99px;transition:width .6s ease}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:.75rem}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.muted{color:var(--text-muted);font-size:.85rem}
+.mt-1{margin-top:1rem}.mt-2{margin-top:2rem}
+.recent-list{display:flex;flex-direction:column;gap:.4rem;max-height:200px;overflow-y:auto}
+.recent-item{padding:.5rem .75rem;background:var(--surface-2);border-radius:var(--radius-sm);font-size:.8rem;display:flex;justify-content:space-between}
+.recent-item strong{color:var(--accent)}
+.mode-toggle{display:inline-flex;gap:.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.25rem;margin-bottom:1.5rem}
+.mode-btn{padding:.5rem 1.2rem;background:transparent;border:none;border-radius:var(--radius-sm);color:var(--text-muted);font-weight:600;font-size:.85rem;cursor:pointer;transition:var(--transition);font-family:inherit}
+.mode-btn.active{background:var(--accent);color:#03110b}
+.game-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-height:380px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;margin-bottom:1.5rem}
+.game-state{padding:2rem}
+.btn-start{font-family:var(--font-display);font-size:1.6rem;font-weight:900;letter-spacing:.08em;padding:1.2rem 3.5rem;background:var(--accent);color:#03110b;border:none;border-radius:var(--radius);cursor:pointer;transition:var(--transition);box-shadow:0 0 40px rgba(0,255,157,.25)}
+.btn-start:hover{transform:scale(1.03);box-shadow:0 0 60px rgba(0,255,157,.4)}
+.btn-start:active{transform:scale(.98)}
+.pulse-ring{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);animation:pulse 1.2s ease-out infinite;margin:0 auto 1rem}
+@keyframes pulse{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.6);opacity:0}}
+.waiting-text{color:var(--text-muted);font-size:1rem}
+.signal-flash{position:absolute;inset:0;background:var(--accent);animation:flash .15s ease-out}
+@keyframes flash{from{opacity:1}to{opacity:.85}}
+.signal-text{font-family:var(--font-display);font-size:2rem;font-weight:900;letter-spacing:.1em;color:#03110b;position:relative;z-index:2;animation:pulseText .4s ease infinite alternate}
+@keyframes pulseText{from{transform:scale(1)}to{transform:scale(1.05)}}
+.result-time{font-family:var(--font-display);font-size:4rem;font-weight:900;color:var(--accent);line-height:1}
+.result-unit{font-size:1rem;color:var(--text-muted);margin-bottom:.5rem}
+.result-msg{font-size:.95rem;color:var(--text-muted);margin-bottom:1.5rem}
+.result-actions{display:flex;gap:.75rem;justify-content:center}
+.play-stats{display:flex;gap:2rem;font-size:.85rem}
+.play-stats strong{color:var(--accent)}
+.lb-filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
+.lb-filter{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-muted);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:inherit}
+.lb-filter.active{background:var(--accent);color:#03110b;border-color:var(--accent)}
+.leaderboard-list{display:flex;flex-direction:column;gap:.5rem}
+.lb-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition)}
+.lb-row:hover{border-color:var(--accent)}
+.lb-row.top-1{border-color:#ffd700;background:linear-gradient(90deg,rgba(255,215,0,.06),transparent)}
+.lb-row.top-2{border-color:#c0c0c0}
+.lb-row.top-3{border-color:#cd7f32}
+.lb-rank{font-family:var(--font-display);font-weight:800;font-size:1rem;width:36px;color:var(--text-muted)}
+.lb-rank.gold{color:#ffd700}.lb-rank.silver{color:#c0c0c0}.lb-rank.bronze{color:#cd7f32}
+.lb-user{flex:1;display:flex;align-items:center;gap:.75rem;min-width:0}
+.lb-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--surface-3)}
+.lb-name{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.lb-name:hover{color:var(--accent)}
+.lb-title{font-size:.7rem;padding:.15rem .5rem;border-radius:99px;background:var(--surface-3);color:var(--text-muted);white-space:nowrap}
+.lb-value{font-family:var(--font-display);font-weight:700;font-size:.95rem;color:var(--accent);min-width:70px;text-align:right}
+.quest-grid{display:grid;gap:.75rem;margin-bottom:2rem}
+.sub-heading{font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.75rem}
+.quest-card{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.quest-info{flex:1;min-width:0}
+.quest-title{font-weight:600;font-size:.9rem;margin-bottom:.2rem}
+.quest-desc{font-size:.8rem;color:var(--text-muted)}
+.quest-progress-bar{height:6px;background:var(--surface-2);border-radius:99px;margin-top:.5rem;overflow:hidden}
+.quest-progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width .4s ease}
+.quest-reward{font-size:.8rem;font-weight:700;color:var(--warning);white-space:nowrap}
+.quest-status{font-size:.75rem;padding:.2rem .6rem;border-radius:99px;background:var(--accent-dim);color:var(--accent);white-space:nowrap}
+.quest-status.completed{background:rgba(0,255,157,.15)}
+.achievement-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
+.achievement-card{display:flex;gap:.85rem;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition)}
+.achievement-card.unlocked{border-color:var(--accent);background:linear-gradient(135deg,rgba(0,255,157,.05),transparent)}
+.achievement-card.locked{opacity:.5}
+.ach-icon{font-size:1.5rem;width:40px;height:40px;display:grid;place-items:center;background:var(--surface-2);border-radius:var(--radius-sm);flex-shrink:0}
+.achievement-card.unlocked .ach-icon{background:var(--accent-dim)}
+.ach-name{font-weight:600;font-size:.85rem;margin-bottom:.15rem}
+.ach-desc{font-size:.75rem;color:var(--text-muted)}
+.profile-header{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.avatar-lg{width:72px;height:72px;border-radius:50%;object-fit:cover;background:var(--surface-3);border:2px solid var(--border)}
+.profile-info{flex:1}
+.profile-info h2{font-size:1.3rem;font-weight:700}
+.title-badge{display:inline-block;font-size:.75rem;padding:.2rem .7rem;border-radius:99px;background:var(--accent-dim);color:var(--accent);margin-top:.25rem;font-weight:600}
+.profile-xp{text-align:center}
+.level-big{font-family:var(--font-display);font-size:2.2rem;font-weight:900;color:var(--accent);line-height:1}
+.title-collection{display:flex;flex-wrap:wrap;gap:.5rem}
+.title-chip{padding:.35rem .8rem;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition)}
+.title-chip:hover{border-color:var(--accent)}
+.title-chip.equipped{background:var(--accent);color:#03110b;border-color:var(--accent)}
+.title-chip.locked{opacity:.4;cursor:not-allowed}
+.input-row{display:flex;gap:.5rem;margin-top:.5rem}
+.input-row input{flex:1;padding:.7rem 1rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.9rem;outline:none;font-family:inherit}
+.input-row input:focus{border-color:var(--accent)}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;font-size:.9rem}
+.toggle-row input[type='checkbox']{width:18px;height:18px;accent-color:var(--accent)}
+.toast-container{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:.5rem;z-index:2000}
+.toast{padding:.85rem 1.2rem;background:var(--surface-3);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius-sm);font-size:.85rem;box-shadow:0 12px 40px rgba(0,0,0,.5);animation:slideIn .35s ease;max-width:340px}
+.toast.error{border-left-color:var(--danger)}
+.toast.achievement{border-left-color:var(--warning)}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@media (max-width:860px){
+  .app{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:static;flex-direction:row;align-items:center;padding:.75rem 1rem;overflow-x:auto}
+  .sidebar-brand{padding:0 1rem 0 0}
+  .nav{flex-direction:row;gap:.25rem}
+  .nav-item span:last-child{display:none}
+  .nav-icon{font-size:1.2rem}
+  .sidebar-footer{display:none}
+  .main{padding:1.25rem}
+  .dashboard-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .result-time{font-size:3rem}
+}
+@media (max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  .play-stats{flex-direction:column;gap:.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH OVERLAY -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <h1 class="logo">ALT<span>//</span>TAB</h1>
+    <p class="tagline">Measure your reflexes. Climb the ranks.</p>
+    <div class="auth-tabs">
+      <button id="tab-login" class="auth-tab active">Sign In</button>
+      <button id="tab-signup" class="auth-tab">Create Account</button>
+    </div>
+    <form id="login-form" class="auth-form">
+      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+    <form id="signup-form" class="auth-form hidden">
+      <input type="email" id="signup-email" placeholder="Email" required />
+      <input type="password" id="signup-password" placeholder="Password (min 6 chars)" required />
+      <input type="text" id="signup-username" placeholder="Username" required />
+      <button type="submit" class="btn-primary">Create Account</button>
+    </form>
+    <div class="divider"><span>or</span></div>
+    <button id="google-signin" class="btn-google">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continue with Google
+    </button>
+    <p id="auth-error" class="error-msg"></p>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><h2 class="logo-small">ALT<span>//</span>TAB</h2></div>
+    <nav class="nav">
+      <button class="nav-item active" data-section="dashboard"><span class="nav-icon">◈</span> Dashboard</button>
+      <button class="nav-item" data-section="play"><span class="nav-icon">▶</span> Play</button>
+      <button class="nav-item" data-section="leaderboard"><span class="nav-icon">▲</span> Leaderboard</button>
+      <button class="nav-item" data-section="quests"><span class="nav-icon">✦</span> Quests</button>
+      <button class="nav-item" data-section="achievements"><span class="nav-icon">◆</span> Achievements</button>
+      <button class="nav-item" data-section="profile"><span class="nav-icon">●</span> Profile</button>
+      <button class="nav-item" data-section="settings"><span class="nav-icon">⚙</span> Settings</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <img id="sidebar-avatar" class="avatar-sm" src="" alt="" />
+        <div>
+          <div id="sidebar-username" class="sidebar-username">—</div>
+          <div id="sidebar-level" class="sidebar-level">Lv. 1</div>
+        </div>
+      </div>
+      <button id="signout-btn" class="btn-ghost btn-sm">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section id="section-dashboard" class="section active">
+      <h1 class="section-title">Dashboard</h1>
+      <p class="section-sub">Welcome back, <span id="dash-username">Player</span>.</p>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Personal Best</div><div class="stat-value" id="dash-pb">—</div><div class="stat-unit">ms</div></div>
+        <div class="stat-card"><div class="stat-label">Average</div><div class="stat-value" id="dash-avg">—</div><div class="stat-unit">ms</div></div>
+        <div class="stat-card"><div class="stat-label">Total Attempts</div><div class="stat-value" id="dash-attempts">0</div></div>
+        <div class="stat-card"><div class="stat-label">Level</div><div class="stat-value" id="dash-level">1</div></div>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-label"><span>XP Progress</span><span id="dash-xp-text">0 / 100</span></div>
+        <div class="xp-bar"><div id="dash-xp-fill" class="xp-fill"></div></div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="card">
+          <h3>Quick Start</h3>
+          <p class="muted">Jump straight into a ranked attempt.</p>
+          <button class="btn-primary btn-lg" id="dash-start-btn" style="margin-top:1rem">START</button>
+        </div>
+        <div class="card">
+          <h3>Recent Attempts</h3>
+          <div id="dash-recent" class="recent-list"><p class="muted">No attempts yet.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLAY -->
+    <section id="section-play" class="section">
+      <h1 class="section-title">Play</h1>
+      <p class="section-sub">Click START, wait for the signal, then press Alt+Tab immediately.</p>
+      <div class="mode-toggle">
+        <button class="mode-btn active" data-mode="ranked">Ranked</button>
+        <button class="mode-btn" data-mode="practice">Practice</button>
+      </div>
+      <div id="game-area" class="game-area">
+        <div id="game-idle" class="game-state">
+          <button id="start-btn" class="btn-start">START</button>
+          <p class="muted mt-1">Your reaction time will be measured from the signal to when the page loses visibility.</p>
+        </div>
+        <div id="game-waiting" class="game-state hidden">
+          <div class="pulse-ring"></div>
+          <p class="waiting-text">Wait for the signal...</p>
+        </div>
+        <div id="game-signal" class="game-state hidden">
+          <div class="signal-flash"></div>
+          <p class="signal-text">ALT+TAB NOW</p>
+        </div>
+        <div id="game-result" class="game-state hidden">
+          <div class="result-time" id="result-time">—</div>
+          <div class="result-unit">ms</div>
+          <p id="result-msg" class="result-msg"></p>
+          <div class="result-actions">
+            <button id="retry-btn" class="btn-primary">Retry</button>
+            <button id="back-to-idle" class="btn-ghost">Back</button>
+          </div>
+        </div>
+      </div>
+      <div class="play-stats">
+        <div><span class="muted">Latest:</span> <strong id="latest-rt">—</strong></div>
+        <div><span class="muted">Best:</span> <strong id="best-rt">—</strong></div>
+        <div><span class="muted">Average:</span> <strong id="avg-rt">—</strong></div>
+      </div>
+    </section>
+
+    <!-- LEADERBOARD -->
+    <section id="section-leaderboard" class="section">
+      <h1 class="section-title">Leaderboard</h1>
+      <p class="section-sub">Global rankings. Updated in real time.</p>
+      <div class="lb-filters">
+        <button class="lb-filter active" data-filter="alltime">All-Time</button>
+        <button class="lb-filter" data-filter="weekly">Weekly</button>
+        <button class="lb-filter" data-filter="monthly">Monthly</button>
+        <button class="lb-filter" data-filter="attempts">Most Attempts</button>
+        <button class="lb-filter" data-filter="level">Highest Level</button>
+      </div>
+      <div id="leaderboard-list" class="leaderboard-list"><p class="muted">Loading...</p></div>
+    </section>
+
+    <!-- QUESTS -->
+    <section id="section-quests" class="section">
+      <h1 class="section-title">Quests</h1>
+      <p class="section-sub">Complete objectives to earn XP and unlock titles.</p>
+      <h2 class="sub-heading">Daily</h2>
+      <div id="daily-quests" class="quest-grid"></div>
+      <h2 class="sub-heading">Weekly</h2>
+      <div id="weekly-quests" class="quest-grid"></div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section id="section-achievements" class="section">
+      <h1 class="section-title">Achievements</h1>
+      <p class="section-sub">Your permanent collection of milestones.</p>
+      <div id="achievement-grid" class="achievement-grid"></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="section-profile" class="section">
+      <h1 class="section-title">Profile</h1>
+      <div class="profile-header card">
+        <img id="profile-avatar" class="avatar-lg" src="" alt="" />
+        <div class="profile-info">
+          <h2 id="profile-username">—</h2>
+          <div id="profile-title" class="title-badge">No Title</div>
+          <p id="profile-joined" class="muted"></p>
+        </div>
+        <div class="profile-xp">
+          <div class="level-big" id="profile-level">1</div>
+          <div class="muted">Level</div>
+        </div>
+      </div>
+      <div class="stats-grid mt-2">
+        <div class="stat-card"><div class="stat-label">Personal Best</div><div class="stat-value" id="profile-pb">—</div></div>
+        <div class="stat-card"><div class="stat-label">Average</div><div class="stat-value" id="profile-avg">—</div></div>
+        <div class="stat-card"><div class="stat-label">Attempts</div><div class="stat-value" id="profile-attempts">0</div></div>
+        <div class="stat-card"><div class="stat-label">Total XP</div><div class="stat-value" id="profile-xp">0</div></div>
+      </div>
+      <div class="card mt-2">
+        <h3>Title Collection</h3>
+        <div id="title-collection" class="title-collection"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="section-settings" class="section">
+      <h1 class="section-title">Settings</h1>
+      <div class="card">
+        <h3>Username</h3>
+        <div class="input-row">
+          <input type="text" id="settings-username" placeholder="New username" />
+          <button id="save-username" class="btn-primary btn-sm">Save</button>
+        </div>
+        <p id="username-error" class="error-msg"></p>
+      </div>
+      <div class="card mt-1">
+        <h3>Avatar</h3>
+        <div class="input-row">
+          <input type="url" id="settings-avatar" placeholder="Avatar image URL" />
+          <button id="save-avatar" class="btn-primary btn-sm">Save</button>
+        </div>
+      </div>
+      <div class="card mt-1">
+        <h3>Sound & Theme</h3>
+        <label class="toggle-row"><span>Sound effects</span><input type="checkbox" id="setting-sound" checked /></label>
+        <label class="toggle-row"><span>Dark theme</span><input type="checkbox" id="setting-dark" checked disabled /></label>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+  }
+}
+</script>
+
+<script type="module">
+import { initializeApp } from "firebase/app";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, updateProfile
+} from "firebase/auth";
+import {
+  getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc,
+  query, orderBy, limit, getDocs, where, serverTimestamp, arrayUnion
+} from "firebase/firestore";
+
+/* =========================================================
+   FIREBASE CONFIG — REPLACE WITH YOUR OWN VALUES
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+let auth, db;
+try {
+  const app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+} catch (e) {
+  console.error("Firebase init failed:", e);
+  alert("Firebase is not configured. Edit firebaseConfig in this file.");
+}
+
+/* =========================================================
+   UI HELPERS
+   ========================================================= */
+function showToast(message, type = "info") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+  const toast = document.createElement("div");
+  toast.className = "toast" + (type ? " " + type : "");
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.transition = "all .3s ease";
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(40px)";
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+/* =========================================================
+   PROFILE / XP
+   ========================================================= */
+function xpToReachLevel(level) {
+  if (level <= 1) return 0;
+  return Math.floor(100 * Math.pow(level - 1, 2.2));
+}
+function xpForNextLevel(level) { return xpToReachLevel(level + 1); }
+
+async function loadProfile(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...snap.data() };
+}
+
+async function saveUsername(uid, username) {
+  const clean = username.trim();
+  if (clean.length < 3 || clean.length > 20) throw new Error("Username must be 3–20 characters.");
+  await updateDoc(doc(db, "users", uid), { username: clean });
+}
+async function saveAvatar(uid, url) {
+  await updateDoc(doc(db, "users", uid), { avatar: url });
+}
+async function equipTitle(uid, title) {
+  const snap = await getDoc(doc(db, "users", uid));
+  if (!snap.exists()) return;
+  const data = snap.data();
+  if (!(data.unlockedTitles || []).includes(title)) {
+    showToast("Title not unlocked.", "error");
+    return;
+  }
+  await updateDoc(doc(db, "users", uid), { equippedTitle: title });
+  showToast(`Equipped: ${title}`);
+  window.dispatchEvent(new CustomEvent("profile-updated"));
+}
+
+function renderProfile(data) {
+  if (!data) return;
+  document.getElementById("profile-username").textContent = data.username || "—";
+  document.getElementById("profile-title").textContent = data.equippedTitle || "No Title";
+  document.getElementById("profile-level").textContent = data.level || 1;
+  document.getElementById("profile-pb").textContent = data.personalBest ? `${data.personalBest} ms` : "—";
+  document.getElementById("profile-avg").textContent = data.averageReaction ? `${data.averageReaction} ms` : "—";
+  document.getElementById("profile-attempts").textContent = data.totalAttempts || 0;
+  document.getElementById("profile-xp").textContent = data.xp || 0;
+  const avatar = document.getElementById("profile-avatar");
+  if (avatar) avatar.src = data.avatar || "";
+  const joined = data.createdAt?.toDate?.();
+  if (joined) document.getElementById("profile-joined").textContent = `Joined ${joined.toLocaleDateString()}`;
+  renderTitles(data);
+}
+
+function renderTitles(data) {
+  const container = document.getElementById("title-collection");
+  if (!container) return;
+  container.innerHTML = "";
+  const allTitles = ["Beginner","Quick Fingers","Speed Demon","Lightning","Unreasonably Fast","Elite","Dedicated","Perfectionist","Veteran","Untouchable"];
+  allTitles.forEach((title) => {
+    const unlocked = (data.unlockedTitles || []).includes(title);
+    const equipped = data.equippedTitle === title;
+    const chip = document.createElement("span");
+    chip.className = `title-chip${unlocked ? "" : " locked"}${equipped ? " equipped" : ""}`;
+    chip.textContent = title;
+    if (unlocked) chip.addEventListener("click", () => equipTitle(data.uid || data.id, title));
+    container.appendChild(chip);
+  });
+}
+
+function updateDashboard(data) {
+  if (!data) return;
+  document.getElementById("dash-username").textContent = data.username || "Player";
+  document.getElementById("dash-pb").textContent = data.personalBest ?? "—";
+  document.getElementById("dash-avg").textContent = data.averageReaction ?? "—";
+  document.getElementById("dash-attempts").textContent = data.totalAttempts || 0;
+  document.getElementById("dash-level").textContent = data.level || 1;
+  const xp = data.xp || 0;
+  const level = data.level || 1;
+  const currentThreshold = xpToReachLevel(level);
+  const nextThreshold = xpForNextLevel(level);
+  const progress = nextThreshold > currentThreshold
+    ? ((xp - currentThreshold) / (nextThreshold - currentThreshold)) * 100 : 0;
+  document.getElementById("dash-xp-text").textContent = `${xp - currentThreshold} / ${nextThreshold - currentThreshold}`;
+  document.getElementById("dash-xp-fill").style.width = `${Math.min(progress, 100)}%`;
+  document.getElementById("sidebar-username").textContent = data.username || "—";
+  document.getElementById("sidebar-level").textContent = `Lv. ${data.level || 1}`;
+  const sideAvatar = document.getElementById("sidebar-avatar");
+  if (sideAvatar) sideAvatar.src = data.avatar || "";
+  document.getElementById("latest-rt").textContent = data.lastReactionTime ? `${data.lastReactionTime} ms` : "—";
+  document.getElementById("best-rt").textContent = data.personalBest ? `${data.personalBest} ms` : "—";
+  document.getElementById("avg-rt").textContent = data.averageReaction ? `${data.averageReaction} ms` : "—";
+}
+
+async function loadRecentAttempts(uid) {
+  const container = document.getElementById("dash-recent");
+  if (!container) return;
+  try {
+    const q = query(collection(db, "users", uid, "attempts"), orderBy("timestamp", "desc"), limit(5));
+    const snap = await getDocs(q);
+    if (snap.empty) { container.innerHTML = '<p class="muted">No attempts yet.</p>'; return; }
+    container.innerHTML = snap.docs.map(d => {
+      const a = d.data();
+      const time = a.timestamp?.toDate?.()?.toLocaleString() || "—";
+      return `<div class="recent-item"><strong>${a.reactionTime} ms</strong><span>${a.gameMode} · ${time}</span></div>`;
+    }).join("");
+  } catch (e) { console.error(e); }
+}
+
+/* =========================================================
+   AUTH
+   ========================================================= */
+const googleProvider = new GoogleAuthProvider();
+
+async function createUserProfile(uid, username, email) {
+  await setDoc(doc(db, "users", uid), {
+    uid, username, email: email || "",
+    avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(username)}`,
+    level: 1, xp: 0, totalAttempts: 0, personalBest: null, averageReaction: null,
+    equippedTitle: "Beginner", unlockedTitles: ["Beginner"],
+    achievements: [], createdAt: serverTimestamp(), lastPlayed: serverTimestamp(),
+    soundEnabled: true
+  });
+}
+
+async function signUp(email, password, username) {
+  const cred = await createUserWithEmailAndPassword(auth, email, password);
+  await updateProfile(cred.user, { displayName: username });
+  await createUserProfile(cred.user.uid, username, email);
+  return cred.user;
+}
+async function signIn(email, password) {
+  return (await signInWithEmailAndPassword(auth, email, password)).user;
+}
+async function signInWithGoogle() {
+  const cred = await signInWithPopup(auth, googleProvider);
+  const user = cred.user;
+  const snap = await getDoc(doc(db, "users", user.uid));
+  if (!snap.exists()) {
+    const username = user.displayName || `Player_${user.uid.slice(0, 6)}`;
+    await createUserProfile(user.uid, username, user.email);
+  }
+  return user;
+}
+async function logOut() { await signOut(auth); }
+
+/* =========================================================
+   QUESTS
+   ========================================================= */
+const DAILY_QUESTS = [
+  { id: "daily_attempts_10", title: "Warm Up", desc: "Complete 10 attempts", target: 10, xp: 50, type: "attempts" },
+  { id: "daily_sub500", title: "Sub-500", desc: "Achieve a reaction below 500ms", target: 1, xp: 75, type: "sub500" },
+  { id: "daily_pb", title: "Push Further", desc: "Improve your personal best", target: 1, xp: 100, type: "pb" },
+  { id: "daily_ranked_5", title: "Ranked Grind", desc: "Complete 5 ranked matches", target: 5, xp: 60, type: "ranked" }
+];
+const WEEKLY_QUESTS = [
+  { id: "weekly_attempts_100", title: "Century", desc: "Complete 100 attempts", target: 100, xp: 300, type: "attempts" },
+  { id: "weekly_sub400_10", title: "Fast Reflexes", desc: "Achieve 10 reactions below 400ms", target: 10, xp: 250, type: "sub400" },
+  { id: "weekly_pb_3", title: "Record Breaker", desc: "Reach a new personal best 3 times", target: 3, xp: 400, type: "pb" }
+];
+function getQuestDefs(period) { return period === "daily" ? DAILY_QUESTS : WEEKLY_QUESTS; }
+function getPeriodKey(period) {
+  const now = new Date();
+  if (period === "daily") return now.toISOString().slice(0, 10);
+  const start = new Date(now.getFullYear(), 0, 1);
+  const days = Math.floor((now - start) / 86400000);
+  const week = Math.ceil((days + start.getDay() + 1) / 7);
+  return `${now.getFullYear()}-W${week}`;
+}
+async function ensureQuestDocs(uid, period, periodKey) {
+  const defs = getQuestDefs(period);
+  for (const def of defs) {
+    const ref = doc(db, "users", uid, "quests", `${def.id}_${periodKey}`);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        questId: def.id, period, periodKey, progress: 0,
+        completed: false, claimed: false, expiresAt: periodKey,
+        updatedAt: serverTimestamp()
+      });
+    }
+  }
+}
+async function fetchQuestProgress(uid, period, periodKey) {
+  const defs = getQuestDefs(period);
+  const results = [];
+  for (const def of defs) {
+    const ref = doc(db, "users", uid, "quests", `${def.id}_${periodKey}`);
+    const snap = await getDoc(ref);
+    results.push(snap.exists() ? { ...def, ...snap.data() } : { ...def, progress: 0, completed: false });
+  }
+  return results;
+}
+async function loadQuests(uid) {
+  const dailyKey = getPeriodKey("daily");
+  const weeklyKey = getPeriodKey("weekly");
+  await ensureQuestDocs(uid, "daily", dailyKey);
+  await ensureQuestDocs(uid, "weekly", weeklyKey);
+  const daily = await fetchQuestProgress(uid, "daily", dailyKey);
+  const weekly = await fetchQuestProgress(uid, "weekly", weeklyKey);
+  renderQuests("daily", daily);
+  renderQuests("weekly", weekly);
+}
+function renderQuests(period, quests) {
+  const container = document.getElementById(`${period}-quests`);
+  if (!container) return;
+  container.innerHTML = "";
+  quests.forEach((q) => {
+    const pct = Math.min(100, Math.round((q.progress / q.target) * 100));
+    const card = document.createElement("div");
+    card.className = "quest-card";
+    card.innerHTML = `
+      <div class="quest-info">
+        <div class="quest-title">${q.title}</div>
+        <div class="quest-desc">${q.desc}</div>
+        <div class="quest-progress-bar"><div class="quest-progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="quest-reward">+${q.xp} XP</div>
+      <div class="quest-status${q.completed ? " completed" : ""}">${q.completed ? "✓ Done" : `${q.progress}/${q.target}`}</div>`;
+    container.appendChild(card);
+  });
+}
+async function updateQuestProgress(uid, event) {
+  const dailyKey = getPeriodKey("daily");
+  const weeklyKey = getPeriodKey("weekly");
+  await updatePeriodQuests(uid, "daily", dailyKey, event);
+  await updatePeriodQuests(uid, "weekly", weeklyKey, event);
+}
+async function updatePeriodQuests(uid, period, periodKey, event) {
+  const defs = getQuestDefs(period);
+  for (const def of defs) {
+    const ref = doc(db, "users", uid, "quests", `${def.id}_${periodKey}`);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) continue;
+    const data = snap.data();
+    if (data.completed) continue;
+    let inc = 0;
+    if (def.type === "attempts") inc = 1;
+    else if (def.type === "ranked" && event.mode === "ranked") inc = 1;
+    else if (def.type === "sub500" && event.reactionTime < 500) inc = 1;
+    else if (def.type === "sub400" && event.reactionTime < 400) inc = 1;
+    else if (def.type === "pb" && event.isPB) inc = 1;
+    if (inc > 0) {
+      const newProgress = Math.min(data.progress + inc, def.target);
+      const completed = newProgress >= def.target;
+      await updateDoc(ref, { progress: newProgress, completed, updatedAt: serverTimestamp() });
+      if (completed) showToast(`Quest complete: ${def.title}`, "achievement");
+    }
+  }
+}
+
+/* =========================================================
+   ACHIEVEMENTS & TITLES
+   ========================================================= */
+const ACHIEVEMENTS = [
+  { id: "first_attempt", name: "First Attempt", desc: "Complete your first attempt", icon: "🎯" },
+  { id: "getting_faster", name: "Getting Faster", desc: "Improve your personal best", icon: "📈" },
+  { id: "speedster", name: "Speedster", desc: "Reach below 400ms", icon: "⚡" },
+  { id: "insane_reflexes", name: "Insane Reflexes", desc: "Reach below 250ms", icon: "🔥" },
+  { id: "addicted", name: "Addicted", desc: "Complete 1,000 attempts", icon: "💀" },
+  { id: "consistent", name: "Consistent", desc: "Play for 7 consecutive days", icon: "📅" },
+  { id: "top_100", name: "Top 100", desc: "Enter the global top 100", icon: "🏅" },
+  { id: "champion", name: "Champion", desc: "Reach the top 10", icon: "👑" }
+];
+
+function renderAchievements(unlockedIds = []) {
+  const grid = document.getElementById("achievement-grid");
+  if (!grid) return;
+  grid.innerHTML = "";
+  ACHIEVEMENTS.forEach((ach) => {
+    const unlocked = unlockedIds.includes(ach.id);
+    const card = document.createElement("div");
+    card.className = `achievement-card ${unlocked ? "unlocked" : "locked"}`;
+    card.innerHTML = `
+      <div class="ach-icon">${unlocked ? ach.icon : "🔒"}</div>
+      <div>
+        <div class="ach-name">${ach.name}</div>
+        <div class="ach-desc">${ach.desc}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+async function checkAchievements(uid, stats) {
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+  const data = snap.data();
+  const unlocked = data.achievements || [];
+  const unlockedTitles = data.unlockedTitles || ["Beginner"];
+  const toUnlock = [];
+  const titlesToUnlock = [];
+
+  const check = (id, cond) => { if (!unlocked.includes(id) && cond) toUnlock.push(id); };
+  check("first_attempt", stats.totalAttempts >= 1);
+  check("getting_faster", stats.isPB && data.totalAttempts > 1);
+  check("speedster", stats.reactionTime < 400);
+  check("insane_reflexes", stats.reactionTime < 250);
+  check("addicted", stats.totalAttempts >= 1000);
+
+  const checkTitle = (t, cond) => { if (!unlockedTitles.includes(t) && cond) titlesToUnlock.push(t); };
+  checkTitle("Quick Fingers", stats.totalAttempts >= 10);
+  checkTitle("Speed Demon", data.personalBest && data.personalBest < 400);
+  checkTitle("Lightning", data.personalBest && data.personalBest < 300);
+  checkTitle("Unreasonably Fast", data.personalBest && data.personalBest < 200);
+  checkTitle("Elite", data.level >= 25);
+  checkTitle("Dedicated", stats.totalAttempts >= 500);
+
+  if (toUnlock.length) {
+    await updateDoc(ref, { achievements: arrayUnion(...toUnlock) });
+    toUnlock.forEach(id => {
+      const ach = ACHIEVEMENTS.find(a => a.id === id);
+      if (ach) showToast(`Achievement: ${ach.name}`, "achievement");
+    });
+  }
+  if (titlesToUnlock.length) {
+    await updateDoc(ref, { unlockedTitles: arrayUnion(...titlesToUnlock) });
+    titlesToUnlock.forEach(t => showToast(`Title unlocked: ${t}`, "achievement"));
+  }
+}
+
+/* =========================================================
+   GAME
+   ========================================================= */
+let currentUser = null;
+let currentUserData = null;
+let gameState = "idle";
+let signalTime = 0;
+let waitTimeout = null;
+let currentMode = "ranked";
+let lastReactionTime = null;
+
+const MIN_RT = 80;
+const MAX_RT = 15000;
+
+function initGame(user) {
+  currentUser = user;
+  document.addEventListener("visibilitychange", handleVisibility);
+}
+
+function handleVisibility() {
+  if (document.hidden) {
+    if (gameState === "signal") {
+      const rt = Math.round(performance.now() - signalTime);
+      finishAttempt(rt);
+    } else if (gameState === "waiting") {
+      falseStart("You tabbed away before the signal appeared.");
+    }
+  }
+}
+
+function startGame(mode = "ranked") {
+  if (gameState !== "idle" && gameState !== "result") return;
+  if (!currentUser) { showToast("Sign in to play.", "error"); return; }
+  currentMode = mode;
+  gameState = "waiting";
+  lastReactionTime = null;
+  updateGameUI("waiting");
+  const delay = 1500 + Math.random() * 3500;
+  waitTimeout = setTimeout(() => {
+    signalTime = performance.now();
+    gameState = "signal";
+    updateGameUI("signal");
+  }, delay);
+}
+
+function falseStart(message) {
+  clearTimeout(waitTimeout);
+  gameState = "result";
+  updateGameUI("result", { time: null, message });
+  showToast(message, "error");
+}
+
+async function finishAttempt(rt) {
+  clearTimeout(waitTimeout);
+  gameState = "result";
+  if (rt < MIN_RT || rt > MAX_RT) {
+    updateGameUI("result", { time: rt, message: "Invalid reaction time — ignored." });
+    return;
+  }
+  lastReactionTime = rt;
+  updateGameUI("result", { time: rt, message: "" });
+  await saveAttempt(rt);
+}
+
+async function saveAttempt(rt) {
+  const userRef = doc(db, "users", currentUser.uid);
+  try {
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) return;
+    const data = snap.data();
+    const isPB = !data.personalBest || rt < data.personalBest;
+    const totalAttempts = (data.totalAttempts || 0) + 1;
+    let newAvg = data.averageReaction == null ? rt
+      : Math.round((data.averageReaction * (totalAttempts - 1) + rt) / totalAttempts);
+    const xpGain = (currentMode === "ranked" ? 10 : 5) + (isPB && data.totalAttempts > 0 ? 50 : 0);
+    const newXp = (data.xp || 0) + xpGain;
+    let newLevel = 1;
+    while (newXp >= xpToReachLevel(newLevel + 1)) newLevel++;
+
+    await updateDoc(userRef, {
+      totalAttempts,
+      personalBest: isPB ? rt : data.personalBest,
+      averageReaction: newAvg,
+      xp: newXp,
+      level: newLevel,
+      lastReactionTime: rt,
+      lastPlayed: serverTimestamp()
+    });
+
+    await addDoc(collection(db, "users", currentUser.uid, "attempts"), {
+      reactionTime: rt, timestamp: serverTimestamp(), gameMode: currentMode
+    });
+
+    // Also record in global leaderboard collection (used for weekly/monthly)
+    if (currentMode === "ranked") {
+      await addDoc(collection(db, "leaderboard"), {
+        userId: currentUser.uid,
+        username: data.username,
+        avatar: data.avatar,
+        equippedTitle: data.equippedTitle || "Beginner",
+        reactionTime: rt,
+        timestamp: serverTimestamp()
+      });
+    }
+
+    await updateQuestProgress(currentUser.uid, {
+      type: "attempt", reactionTime: rt, mode: currentMode, isPB
+    });
+    await checkAchievements(currentUser.uid, { reactionTime: rt, totalAttempts, isPB });
+
+    if (isPB && data.totalAttempts > 0) showToast("New personal best!", "achievement");
+    window.dispatchEvent(new CustomEvent("profile-updated"));
+    await loadRecentAttempts(currentUser.uid);
+  } catch (e) {
+    console.error("Failed to save attempt:", e);
+    showToast("Failed to save attempt. Check connection.", "error");
+  }
+}
+
+function updateGameUI(phase, data = {}) {
+  const idle = document.getElementById("game-idle");
+  const waiting = document.getElementById("game-waiting");
+  const signal = document.getElementById("game-signal");
+  const result = document.getElementById("game-result");
+  [idle, waiting, signal, result].forEach(el => el.classList.add("hidden"));
+
+  if (phase === "idle") idle.classList.remove("hidden");
+  else if (phase === "waiting") waiting.classList.remove("hidden");
+  else if (phase === "signal") signal.classList.remove("hidden");
+  else if (phase === "result") {
+    result.classList.remove("hidden");
+    document.getElementById("result-time").textContent = data.time != null ? data.time : "—";
+    document.getElementById("result-msg").textContent = data.message || "";
+    if (data.time != null) {
+      document.getElementById("latest-rt").textContent = `${data.time} ms`;
+      const bestEl = document.getElementById("best-rt");
+      const cur = bestEl.textContent.replace(" ms", "");
+      if (cur === "—" || data.time < parseInt(cur)) bestEl.textContent = `${data.time} ms`;
+    }
+  }
+}
+
+function resetGame() {
+  clearTimeout(waitTimeout);
+  gameState = "idle";
+  updateGameUI("idle");
+}
+
+function bindGameUI() {
+  document.getElementById("start-btn")?.addEventListener("click", () => startGame(currentMode));
+  document.getElementById("retry-btn")?.addEventListener("click", () => { resetGame(); startGame(currentMode); });
+  document.getElementById("back-to-idle")?.addEventListener("click", () => resetGame());
+  document.querySelectorAll(".mode-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentMode = btn.dataset.mode;
+    });
+  });
+  document.getElementById("dash-start-btn")?.addEventListener("click", () => {
+    document.querySelector('[data-section="play"]')?.click();
+  });
+}
+
+/* =========================================================
+   LEADERBOARD
+   ========================================================= */
+let currentFilter = "alltime";
+
+function initLeaderboard() {
+  document.querySelectorAll(".lb-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".lb-filter").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentFilter = btn.dataset.filter;
+      loadLeaderboard(currentFilter);
+    });
+  });
+}
+
+async function loadLeaderboard(filter = "alltime") {
+  const list = document.getElementById("leaderboard-list");
+  if (!list) return;
+  list.innerHTML = '<p class="muted">Loading...</p>';
+  try {
+    let q;
+    if (filter === "alltime") {
+      q = query(collection(db, "users"), where("personalBest", "!=", null), orderBy("personalBest", "asc"), limit(50));
+    } else if (filter === "attempts") {
+      q = query(collection(db, "users"), orderBy("totalAttempts", "desc"), limit(50));
+    } else if (filter === "level") {
+      q = query(collection(db, "users"), orderBy("level", "desc"), limit(50));
+    } else {
+      const now = new Date();
+      let start;
+      if (filter === "weekly") {
+        start = new Date(now);
+        start.setDate(now.getDate() - now.getDay());
+        start.setHours(0, 0, 0, 0);
+      } else {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+      }
+      q = query(collection(db, "leaderboard"), where("timestamp", ">=", start), orderBy("timestamp", "desc"), limit(100));
+    }
+
+    const snap = await getDocs(q);
+    if (snap.empty) { list.innerHTML = '<p class="muted">No entries yet. Be the first!</p>'; return; }
+
+    let rows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    if (filter === "weekly" || filter === "monthly") {
+      const bestMap = new Map();
+      rows.forEach(r => {
+        const uid = r.userId;
+        if (!bestMap.has(uid) || r.reactionTime < bestMap.get(uid).reactionTime) bestMap.set(uid, r);
+      });
+      rows = Array.from(bestMap.values()).sort((a, b) => a.reactionTime - b.reactionTime).slice(0, 50);
+    }
+
+    renderLeaderboard(rows, filter);
+  } catch (e) {
+    console.error("Leaderboard error:", e);
+    list.innerHTML = '<p class="muted">Failed to load. You may need to create a Firestore composite index (see README).</p>';
+  }
+}
+
+function renderLeaderboard(rows, filter) {
+  const list = document.getElementById("leaderboard-list");
+  list.innerHTML = "";
+  rows.forEach((row, i) => {
+    const rank = i + 1;
+    const div = document.createElement("div");
+    div.className = `lb-row${rank <= 3 ? ` top-${rank}` : ""}`;
+    let rankClass = rank === 1 ? "gold" : rank === 2 ? "silver" : rank === 3 ? "bronze" : "";
+    let value = "";
+    if (filter === "attempts") value = `${row.totalAttempts ?? 0} attempts`;
+    else if (filter === "level") value = `Lv. ${row.level ?? 1}`;
+    else value = `${row.personalBest ?? row.reactionTime ?? "—"} ms`;
+    const avatar = row.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(row.username || "player")}`;
+    div.innerHTML = `
+      <span class="lb-rank ${rankClass}">#${rank}</span>
+      <div class="lb-user">
+        <img class="lb-avatar" src="${avatar}" alt="" />
+        <span class="lb-name" data-uid="${row.uid || row.userId}">${row.username || "Unknown"}</span>
+        <span class="lb-title">${row.equippedTitle || "Beginner"}</span>
+      </div>
+      <span class="lb-value">${value}</span>`;
+    list.appendChild(div);
+  });
+  list.querySelectorAll(".lb-name").forEach(el => {
+    el.addEventListener("click", () => {
+      const uid = el.dataset.uid;
+      if (uid) window.dispatchEvent(new CustomEvent("view-profile", { detail: uid }));
+    });
+  });
+}
+
+/* =========================================================
+   NAVIGATION / SECTION SWITCHING
+   ========================================================= */
+function setupNavigation() {
+  document.querySelectorAll(".nav-item").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const section = btn.dataset.section;
+      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+      document.getElementById(`section-${section}`).classList.add("active");
+      if (section === "leaderboard") loadLeaderboard(currentFilter);
+      if (section === "quests" && currentUser) loadQuests(currentUser.uid);
+      if (section === "achievements" && currentUserData) renderAchievements(currentUserData.achievements || []);
+      if (section === "dashboard" && currentUser) { await refreshUserData(); loadRecentAttempts(currentUser.uid); }
+    });
+  });
+}
+
+/* =========================================================
+   DATA REFRESH
+   ========================================================= */
+async function refreshUserData() {
+  if (!currentUser) return;
+  currentUserData = await loadProfile(currentUser.uid);
+  if (currentUserData) {
+    updateDashboard(currentUserData);
+    renderProfile(currentUserData);
+    renderAchievements(currentUserData.achievements || []);
+  }
+}
+
+window.addEventListener("profile-updated", refreshUserData);
+
+window.addEventListener("view-profile", async (e) => {
+  const uid = e.detail;
+  const data = await loadProfile(uid);
+  if (data) {
+    renderProfile(data);
+    document.querySelector('[data-section="profile"]')?.click();
+    showToast(`Viewing ${data.username || "player"}'s profile`);
+  }
+});
+
+/* =========================================================
+   AUTH SCREEN BINDING
+   ========================================================= */
+document.getElementById("tab-login")?.addEventListener("click", () => {
+  document.getElementById("tab-login").classList.add("active");
+  document.getElementById("tab-signup").classList.remove("active");
+  document.getElementById("login-form").classList.remove("hidden");
+  document.getElementById("signup-form").classList.add("hidden");
+});
+document.getElementById("tab-signup")?.addEventListener("click", () => {
+  document.getElementById("tab-signup").classList.add("active");
+  document.getElementById("tab-login").classList.remove("active");
+  document.getElementById("signup-form").classList.remove("hidden");
+  document.getElementById("login-form").classList.add("hidden");
+});
+
+document.getElementById("login-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = document.getElementById("auth-error");
+  err.textContent = "";
+  try {
+    await signIn(
+      document.getElementById("login-email").value,
+      document.getElementById("login-password").value
+    );
+  } catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
+});
+
+document.getElementById("signup-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = document.getElementById("auth-error");
+  err.textContent = "";
+  try {
+    await signUp(
+      document.getElementById("signup-email").value,
+      document.getElementById("signup-password").value,
+      document.getElementById("signup-username").value
+    );
+  } catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
+});
+
+document.getElementById("google-signin")?.addEventListener("click", async () => {
+  const err = document.getElementById("auth-error");
+  err.textContent = "";
+  try { await signInWithGoogle(); }
+  catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
+});
+
+document.getElementById("signout-btn")?.addEventListener("click", async () => {
+  await logOut();
+});
+
+/* =========================================================
+   SETTINGS BINDING
+   ========================================================= */
+document.getElementById("save-username")?.addEventListener("click", async () => {
+  if (!currentUser) return;
+  const errEl = document.getElementById("username-error");
+  errEl.textContent = "";
+  try {
+    await saveUsername(currentUser.uid, document.getElementById("settings-username").value);
+    showToast("Username updated.");
+    await refreshUserData();
+  } catch (ex) { errEl.textContent = ex.message; }
+});
+document.getElementById("save-avatar")?.addEventListener("click", async () => {
+  if (!currentUser) return;
+  const url = document.getElementById("settings-avatar").value.trim();
+  if (!url) return;
+  await saveAvatar(currentUser.uid, url);
+  showToast("Avatar updated.");
+  await refreshUserData();
+});
+
+/* =========================================================
+   AUTH STATE HANDLER
+   ========================================================= */
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    document.getElementById("auth-screen").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    initGame(user);
+    bindGameUI();
+    initLeaderboard();
+    setupNavigation();
+    await refreshUserData();
+    await loadRecentAttempts(user.uid);
+  } else {
+    currentUser = null;
+    currentUserData = null;
+    document.getElementById("auth-screen").classList.remove("hidden");
+    document.getElementById("app").classList.add("hidden");
+  }
+});
+
+console.log("ALT//TAB loaded. Configure firebaseConfig before testing.");
+</script>
+</body>
+</html>
