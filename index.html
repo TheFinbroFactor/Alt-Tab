@@ -3,171 +3,351 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ALT//TAB — Competitive Reaction Game</title>
+<title>ALT//TAB — Classroom Edition</title>
+<link rel="icon" href="data:," />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ===== CLASSROOM PALETTE ===== */
 :root{
-  --bg:#08090b;--surface:#111318;--surface-2:#181b22;--surface-3:#1f232c;
-  --border:#262a34;--text:#e8eaed;--text-muted:#8b919e;
-  --accent:#00ff9d;--accent-dim:rgba(0,255,157,.12);--accent-blue:#00c2ff;
-  --danger:#ff4d6a;--warning:#ffb020;
-  --radius:12px;--radius-sm:8px;
+  --bg:#0d1210;
+  --chalkboard:#1a2620;
+  --chalkboard-light:#213028;
+  --chalkboard-dark:#0e1712;
+  --wood:#2a1810;
+  --wood-light:#3d2418;
+  --wood-dark:#1a0f08;
+  --surface:var(--chalkboard);
+  --surface-2:var(--chalkboard-light);
+  --surface-3:#283930;
+  --border:rgba(232,232,208,0.12);
+  --border-strong:rgba(232,232,208,0.25);
+  --text:#e8e8d0;
+  --text-muted:#8a9b8f;
+  --chalk:#f0ead6;
+  --accent:#00ff9d;
+  --accent-dim:rgba(0,255,157,.12);
+  --accent-blue:#00c2ff;
+  --danger:#ff4d6a;
+  --warning:#ffb020;
+  --radius:12px;
+  --radius-sm:8px;
   --font:'Inter',system-ui,-apple-system,sans-serif;
   --font-display:'Orbitron','Inter',sans-serif;
+  --font-chalk:'Caveat','Inter',cursive;
   --transition:.2s ease;
 }
 html{font-size:16px}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse at 10% 5%,rgba(0,255,157,.04),transparent 40%),
+    radial-gradient(ellipse at 90% 95%,rgba(0,194,255,.03),transparent 40%),
+    repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.008) 3px 4px);
+}
 .hidden{display:none!important}
-.auth-screen{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 0%,#0e1a18 0%,var(--bg) 70%);z-index:1000;padding:1rem}
-.auth-card{width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;box-shadow:0 24px 80px rgba(0,0,0,.6)}
-.logo{font-family:var(--font-display);font-size:2rem;font-weight:900;letter-spacing:.04em;text-align:center;color:var(--text)}
-.logo span{color:var(--accent)}
-.tagline{text-align:center;color:var(--text-muted);font-size:.875rem;margin-top:.5rem;margin-bottom:2rem}
-.auth-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;background:var(--surface-2);border-radius:var(--radius-sm);padding:.25rem}
-.auth-tab{flex:1;padding:.6rem;border:none;background:transparent;color:var(--text-muted);font-weight:600;font-size:.875rem;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition)}
-.auth-tab.active{background:var(--surface-3);color:var(--text)}
+
+/* ===== AUTH ===== */
+.auth-screen{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 0%,#0e1a16 0%,var(--bg) 70%);z-index:1000;padding:1rem}
+.auth-card{
+  width:100%;max-width:420px;
+  background:linear-gradient(180deg,var(--chalkboard-light) 0%,var(--chalkboard) 100%);
+  border:2px solid var(--wood);
+  border-radius:20px;padding:2.5rem 2rem;
+  box-shadow:0 24px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);
+  position:relative;
+}
+.auth-card::before{
+  content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+  width:80px;height:16px;background:linear-gradient(180deg,var(--wood-light),var(--wood));
+  border-radius:4px;border:1px solid var(--wood-dark);
+  box-shadow:0 2px 4px rgba(0,0,0,.4);
+}
+.logo{font-family:var(--font-display);font-size:2rem;font-weight:900;letter-spacing:.04em;text-align:center;color:var(--chalk);text-shadow:0 0 20px rgba(0,255,157,.15)}
+.logo span{color:var(--accent);text-shadow:0 0 20px rgba(0,255,157,.5)}
+.tagline{text-align:center;color:var(--text-muted);font-size:.875rem;margin-top:.5rem;margin-bottom:2rem;font-family:var(--font-chalk);font-size:1.05rem}
+.auth-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;background:var(--chalkboard-dark);border-radius:var(--radius-sm);padding:.25rem;border:1px solid var(--border)}
+.auth-tab{flex:1;padding:.6rem;border:none;background:transparent;color:var(--text-muted);font-weight:600;font-size:.875rem;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);font-family:inherit}
+.auth-tab.active{background:var(--surface-2);color:var(--chalk)}
 .auth-form{display:flex;flex-direction:column;gap:.75rem}
-.auth-form input{width:100%;padding:.8rem 1rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.95rem;outline:none;transition:var(--transition)}
+.auth-form input{width:100%;padding:.8rem 1rem;background:var(--chalkboard-dark);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.95rem;outline:none;transition:var(--transition);font-family:inherit}
 .auth-form input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
 .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1.5rem;background:var(--accent);color:#03110b;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.95rem;cursor:pointer;transition:var(--transition);font-family:inherit}
-.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,255,157,.3)}
 .btn-primary:active{transform:translateY(0)}
 .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .btn-lg{padding:1rem 2.5rem;font-size:1.1rem}
 .btn-sm{padding:.5rem 1rem;font-size:.85rem}
 .btn-ghost{padding:.6rem 1rem;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius-sm);font-weight:600;font-size:.85rem;cursor:pointer;transition:var(--transition);font-family:inherit}
-.btn-ghost:hover{border-color:var(--text-muted);color:var(--text)}
-.btn-google{display:flex;align-items:center;justify-content:center;gap:.75rem;width:100%;padding:.8rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-weight:600;font-size:.9rem;cursor:pointer;transition:var(--transition);font-family:inherit}
-.btn-google:hover{background:var(--surface-3)}
+.btn-ghost:hover{border-color:var(--text-muted);color:var(--chalk)}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:.75rem;width:100%;padding:.8rem;background:var(--chalkboard-dark);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-weight:600;font-size:.9rem;cursor:pointer;transition:var(--transition);font-family:inherit}
+.btn-google:hover{background:var(--surface-2)}
 .divider{display:flex;align-items:center;gap:1rem;margin:1.25rem 0;color:var(--text-muted);font-size:.8rem}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
 .error-msg{color:var(--danger);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+
+/* ===== APP LAYOUT ===== */
 .app{display:flex;min-height:100vh}
-.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:1.5rem 1rem;position:sticky;top:0;height:100vh;flex-shrink:0}
-.sidebar-brand{padding:0 .5rem 1.5rem}
-.logo-small{font-family:var(--font-display);font-size:1.1rem;font-weight:800;letter-spacing:.06em}
+.sidebar{
+  width:240px;background:linear-gradient(180deg,var(--wood-light) 0%,var(--wood) 100%);
+  border-right:2px solid var(--wood-dark);
+  display:flex;flex-direction:column;padding:1.5rem 1rem;
+  position:sticky;top:0;height:100vh;flex-shrink:0;
+  box-shadow:inset -4px 0 20px rgba(0,0,0,.3);
+}
+.sidebar-brand{padding:0 .5rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:.75rem}
+.logo-small{font-family:var(--font-display);font-size:1.1rem;font-weight:800;letter-spacing:.06em;color:var(--chalk)}
 .logo-small span{color:var(--accent)}
 .nav{display:flex;flex-direction:column;gap:.25rem;flex:1}
-.nav-item{display:flex;align-items:center;gap:.75rem;padding:.7rem .85rem;background:transparent;border:none;border-radius:var(--radius-sm);color:var(--text-muted);font-size:.9rem;font-weight:500;text-align:left;cursor:pointer;transition:var(--transition);font-family:inherit}
-.nav-item:hover{background:var(--surface-2);color:var(--text)}
-.nav-item.active{background:var(--accent-dim);color:var(--accent)}
-.nav-icon{font-size:1rem;width:20px;text-align:center}
-.sidebar-footer{border-top:1px solid var(--border);padding-top:1rem;margin-top:1rem}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.7rem .85rem;background:transparent;border:none;border-radius:var(--radius-sm);color:rgba(232,232,208,.65);font-size:.9rem;font-weight:500;text-align:left;cursor:pointer;transition:var(--transition);font-family:inherit}
+.nav-item:hover{background:rgba(0,0,0,.2);color:var(--chalk)}
+.nav-item.active{background:rgba(0,255,157,.12);color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.nav-icon{font-size:1rem;width:20px;text-align:center;opacity:.8}
+.sidebar-footer{border-top:1px solid rgba(255,255,255,.06);padding-top:1rem;margin-top:1rem}
 .sidebar-user{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
-.avatar-sm{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--surface-3);border:1px solid var(--border)}
-.sidebar-username{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.avatar-sm{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--wood-dark);border:2px solid rgba(232,232,208,.15)}
+.sidebar-username{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;color:var(--chalk)}
 .sidebar-level{font-size:.75rem;color:var(--accent)}
 .main{flex:1;padding:2rem 2.5rem;overflow-y:auto;max-width:1200px}
-.section{display:none;animation:fadeIn .3s ease}
+.section{display:none;animation:fadeIn .35s ease}
 .section.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.section-title{font-family:var(--font-display);font-size:1.6rem;font-weight:800;letter-spacing:.03em;margin-bottom:.25rem}
-.section-sub{color:var(--text-muted);font-size:.9rem;margin-bottom:1.75rem}
+.section-title{font-family:var(--font-display);font-size:1.6rem;font-weight:800;letter-spacing:.03em;margin-bottom:.25rem;color:var(--chalk);position:relative;display:inline-block}
+.section-title::after{content:'';position:absolute;bottom:-4px;left:0;width:60%;height:2px;background:linear-gradient(90deg,var(--accent),transparent);border-radius:2px}
+.section-sub{color:var(--text-muted);font-size:.9rem;margin:1rem 0 1.75rem}
+
+/* ===== STATS/CARDS ===== */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:var(--transition)}
-.stat-card:hover{border-color:var(--accent)}
+.stat-card{
+  background:linear-gradient(180deg,var(--chalkboard-light),var(--chalkboard));
+  border:2px solid var(--wood);border-radius:var(--radius);
+  padding:1.25rem;transition:var(--transition);position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 80% 20%,rgba(0,255,157,.05),transparent 60%);
+  pointer-events:none;
+}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
 .stat-value{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--accent)}
 .stat-unit{font-size:.75rem;color:var(--text-muted)}
-.xp-bar-wrap{margin-bottom:1.5rem}
-.xp-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--text-muted);margin-bottom:.4rem}
-.xp-bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
-.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-blue));border-radius:99px;transition:width .6s ease}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
-.card h3{font-size:1rem;font-weight:700;margin-bottom:.75rem}
+.card{
+  background:linear-gradient(180deg,var(--chalkboard-light),var(--chalkboard));
+  border:2px solid var(--wood);border-radius:var(--radius);padding:1.5rem;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:.75rem;color:var(--chalk);font-family:var(--font-display);letter-spacing:.03em}
 .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .muted{color:var(--text-muted);font-size:.85rem}
 .mt-1{margin-top:1rem}.mt-2{margin-top:2rem}
-.recent-list{display:flex;flex-direction:column;gap:.4rem;max-height:200px;overflow-y:auto}
-.recent-item{padding:.5rem .75rem;background:var(--surface-2);border-radius:var(--radius-sm);font-size:.8rem;display:flex;justify-content:space-between}
-.recent-item strong{color:var(--accent)}
-.mode-toggle{display:inline-flex;gap:.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.25rem;margin-bottom:1.5rem}
+.recent-list{display:flex;flex-direction:column;gap:.4rem;max-height:220px;overflow-y:auto}
+.recent-item{padding:.55rem .85rem;background:var(--chalkboard-dark);border-radius:var(--radius-sm);font-size:.8rem;display:flex;justify-content:space-between;border:1px solid var(--border)}
+.recent-item strong{color:var(--accent);font-family:var(--font-display)}
+.xp-bar-wrap{margin-bottom:1.5rem}
+.xp-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--text-muted);margin-bottom:.4rem}
+.xp-bar{height:8px;background:var(--chalkboard-dark);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
+.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-blue));border-radius:99px;transition:width .6s ease}
+
+/* ===== MODE / GAME ===== */
+.mode-toggle{display:inline-flex;gap:.25rem;background:var(--chalkboard-dark);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.25rem;margin-bottom:1.5rem}
 .mode-btn{padding:.5rem 1.2rem;background:transparent;border:none;border-radius:var(--radius-sm);color:var(--text-muted);font-weight:600;font-size:.85rem;cursor:pointer;transition:var(--transition);font-family:inherit}
 .mode-btn.active{background:var(--accent);color:#03110b}
-.game-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-height:380px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;margin-bottom:1.5rem}
-.game-state{padding:2rem}
+.game-area{
+  background:linear-gradient(180deg,var(--chalkboard-light),var(--chalkboard-dark));
+  border:2px solid var(--wood);border-radius:var(--radius);
+  min-height:480px;display:grid;place-items:center;text-align:center;
+  position:relative;overflow:hidden;margin-bottom:1.5rem;
+  padding:2rem 1rem;
+  background-image:radial-gradient(ellipse at center,rgba(0,255,157,.03),transparent 70%);
+}
+.game-state{padding:1rem;width:100%}
 .btn-start{font-family:var(--font-display);font-size:1.6rem;font-weight:900;letter-spacing:.08em;padding:1.2rem 3.5rem;background:var(--accent);color:#03110b;border:none;border-radius:var(--radius);cursor:pointer;transition:var(--transition);box-shadow:0 0 40px rgba(0,255,157,.25)}
-.btn-start:hover{transform:scale(1.03);box-shadow:0 0 60px rgba(0,255,157,.4)}
+.btn-start:hover{transform:scale(1.03);box-shadow:0 0 60px rgba(0,255,157,.5)}
 .btn-start:active{transform:scale(.98)}
 .pulse-ring{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);animation:pulse 1.2s ease-out infinite;margin:0 auto 1rem}
 @keyframes pulse{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.6);opacity:0}}
-.waiting-text{color:var(--text-muted);font-size:1rem}
-.signal-flash{position:absolute;inset:0;background:var(--accent);animation:flash .15s ease-out}
-@keyframes flash{from{opacity:1}to{opacity:.85}}
-.signal-text{font-family:var(--font-display);font-size:2rem;font-weight:900;letter-spacing:.1em;color:#03110b;position:relative;z-index:2;animation:pulseText .4s ease infinite alternate}
-@keyframes pulseText{from{transform:scale(1)}to{transform:scale(1.05)}}
-.result-time{font-family:var(--font-display);font-size:4rem;font-weight:900;color:var(--accent);line-height:1}
+
+/* ===== CRT MONITOR ===== */
+.monitor{display:flex;flex-direction:column;align-items:center;margin:0 auto 1rem}
+.monitor-frame{
+  background:linear-gradient(180deg,var(--wood-light) 0%,var(--wood) 100%);
+  border:6px solid var(--wood-dark);border-radius:16px;padding:12px;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.06),0 20px 40px rgba(0,0,0,.6);
+  position:relative;
+}
+.monitor-frame::before{
+  content:'';position:absolute;top:4px;left:20%;right:20%;height:3px;
+  background:repeating-linear-gradient(90deg,rgba(0,0,0,.4) 0 2px,transparent 2px 5px);
+  border-radius:2px;
+}
+.monitor-frame::after{
+  content:'';position:absolute;bottom:3px;right:8px;
+  width:6px;height:6px;background:#ff3344;border-radius:50%;
+  box-shadow:0 0 8px #ff3344;
+}
+.monitor-screen{
+  position:relative;width:420px;height:250px;max-width:100%;background:#0a1410;
+  border-radius:8px;overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.9),inset 0 0 10px rgba(0,255,157,.1);
+}
+#game-canvas{width:100%;height:100%;display:block}
+.screen-glare{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 40%,transparent 60%,rgba(0,255,157,.03) 100%);pointer-events:none;border-radius:8px;z-index:2}
+.scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.15) 0 1px,transparent 1px 3px);pointer-events:none;z-index:1;opacity:.4}
+.monitor-stand{width:100px;height:14px;background:linear-gradient(180deg,var(--wood),var(--wood-dark));border-radius:0 0 8px 8px;margin-top:-1px;box-shadow:0 4px 8px rgba(0,0,0,.4)}
+
+/* REFLECTION */
+.reflection{
+  position:absolute;bottom:8%;right:8%;width:68px;height:68px;border-radius:50%;
+  overflow:hidden;border:2px solid rgba(232,232,208,.35);
+  background:rgba(0,0,0,.5);opacity:.9;transition:all .35s ease;
+  box-shadow:0 0 20px rgba(0,0,0,.7),inset 0 0 20px rgba(0,0,0,.3);
+  z-index:3;
+}
+.reflection img,.reflection svg{width:100%;height:100%;object-fit:cover}
+.reflection-player{animation:gentleFloat 3s ease-in-out infinite}
+@keyframes gentleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.reflection-teacher{
+  border-color:var(--danger);width:80px;height:80px;
+  box-shadow:0 0 30px rgba(255,77,106,.7),0 0 60px rgba(255,77,106,.4),inset 0 0 20px rgba(255,77,106,.2);
+  animation:teacherPulse .7s ease-in-out infinite alternate;opacity:1;
+}
+@keyframes teacherPulse{from{transform:scale(1)}to{transform:scale(1.08)}}
+.monitor.monitor-signal .monitor-screen{animation:screenShake .18s ease infinite;box-shadow:inset 0 0 40px rgba(0,0,0,.9),0 0 40px rgba(255,77,106,.5),inset 0 0 20px rgba(255,77,106,.2)}
+@keyframes screenShake{0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}50%{transform:translate(1px,-2px)}75%{transform:translate(2px,2px)}}
+.monitor.monitor-signal .screen-glare{background:linear-gradient(135deg,rgba(255,77,106,.15) 0%,transparent 50%)}
+.signal-flash-overlay{position:absolute;inset:0;background:rgba(255,77,106,.5);animation:flashOut .5s ease-out forwards;z-index:4;pointer-events:none;border-radius:8px}
+@keyframes flashOut{from{opacity:1}to{opacity:0}}
+.waiting-text{color:var(--text-muted);font-size:.95rem;font-family:var(--font-chalk);font-size:1.15rem}
+.signal-text{font-family:var(--font-display);font-size:1.3rem;font-weight:900;letter-spacing:.12em;color:var(--danger);animation:pulseText .4s ease infinite alternate;text-shadow:0 0 20px rgba(255,77,106,.6)}
+@keyframes pulseText{from{transform:scale(1)}to{transform:scale(1.06)}}
+
+/* RESULT */
+.result-time{font-family:var(--font-display);font-size:4rem;font-weight:900;color:var(--accent);line-height:1;text-shadow:0 0 30px rgba(0,255,157,.3)}
 .result-unit{font-size:1rem;color:var(--text-muted);margin-bottom:.5rem}
-.result-msg{font-size:.95rem;color:var(--text-muted);margin-bottom:1.5rem}
+.result-msg{font-size:.95rem;color:var(--text-muted);margin-bottom:1rem}
+.result-elo{font-size:1rem;font-weight:600;margin-bottom:1.5rem;font-family:var(--font-display);letter-spacing:.03em}
+.elo-up{color:var(--accent)}.elo-down{color:var(--danger)}
 .result-actions{display:flex;gap:.75rem;justify-content:center}
-.play-stats{display:flex;gap:2rem;font-size:.85rem}
-.play-stats strong{color:var(--accent)}
+.play-stats{display:flex;gap:2rem;font-size:.85rem;flex-wrap:wrap;justify-content:center}
+.play-stats strong{color:var(--accent);font-family:var(--font-display)}
+
+/* ===== LEADERBOARD ===== */
 .lb-filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
-.lb-filter{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-muted);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:inherit}
+.lb-filter{padding:.5rem 1rem;background:var(--chalkboard-dark);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-muted);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:inherit}
 .lb-filter.active{background:var(--accent);color:#03110b;border-color:var(--accent)}
 .leaderboard-list{display:flex;flex-direction:column;gap:.5rem}
-.lb-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition)}
-.lb-row:hover{border-color:var(--accent)}
-.lb-row.top-1{border-color:#ffd700;background:linear-gradient(90deg,rgba(255,215,0,.06),transparent)}
-.lb-row.top-2{border-color:#c0c0c0}
-.lb-row.top-3{border-color:#cd7f32}
-.lb-rank{font-family:var(--font-display);font-weight:800;font-size:1rem;width:36px;color:var(--text-muted)}
+.lb-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:linear-gradient(180deg,var(--chalkboard-light),var(--chalkboard));border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition)}
+.lb-row:hover{border-color:var(--accent);transform:translateX(2px)}
+.lb-row.top-1{border-color:#ffd700;background:linear-gradient(90deg,rgba(255,215,0,.08),var(--chalkboard))}
+.lb-row.top-2{border-color:#c0c0c0;background:linear-gradient(90deg,rgba(192,192,192,.06),var(--chalkboard))}
+.lb-row.top-3{border-color:#cd7f32;background:linear-gradient(90deg,rgba(205,127,50,.06),var(--chalkboard))}
+.lb-rank{font-family:var(--font-display);font-weight:800;font-size:1rem;width:40px;color:var(--text-muted)}
 .lb-rank.gold{color:#ffd700}.lb-rank.silver{color:#c0c0c0}.lb-rank.bronze{color:#cd7f32}
 .lb-user{flex:1;display:flex;align-items:center;gap:.75rem;min-width:0}
-.lb-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--surface-3)}
-.lb-name{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.lb-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--wood-dark);border:1px solid var(--border)}
+.lb-name{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;color:var(--chalk)}
 .lb-name:hover{color:var(--accent)}
-.lb-title{font-size:.7rem;padding:.15rem .5rem;border-radius:99px;background:var(--surface-3);color:var(--text-muted);white-space:nowrap}
-.lb-value{font-family:var(--font-display);font-weight:700;font-size:.95rem;color:var(--accent);min-width:70px;text-align:right}
+.lb-title{font-size:.7rem;padding:.15rem .5rem;border-radius:99px;background:var(--chalkboard-dark);color:var(--text-muted);white-space:nowrap;border:1px solid var(--border)}
+.lb-value{font-family:var(--font-display);font-weight:700;font-size:.95rem;color:var(--accent);min-width:80px;text-align:right}
+
+/* ===== QUESTS ===== */
 .quest-grid{display:grid;gap:.75rem;margin-bottom:2rem}
-.sub-heading{font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.75rem}
-.quest-card{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.sub-heading{font-size:.9rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.75rem;font-family:var(--font-display)}
+.quest-card{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:linear-gradient(180deg,var(--chalkboard-light),var(--chalkboard));border:1px solid var(--border);border-radius:var(--radius-sm)}
 .quest-info{flex:1;min-width:0}
-.quest-title{font-weight:600;font-size:.9rem;margin-bottom:.2rem}
+.quest-title{font-weight:600;font-size:.9rem;margin-bottom:.2rem;color:var(--chalk)}
 .quest-desc{font-size:.8rem;color:var(--text-muted)}
-.quest-progress-bar{height:6px;background:var(--surface-2);border-radius:99px;margin-top:.5rem;overflow:hidden}
+.quest-progress-bar{height:6px;background:var(--chalkboard-dark);border-radius:99px;margin-top:.5rem;overflow:hidden}
 .quest-progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width .4s ease}
-.quest-reward{font-size:.8rem;font-weight:700;color:var(--warning);white-space:nowrap}
+.quest-reward{font-size:.8rem;font-weight:700;color:var(--warning);white-space:nowrap;font-family:var(--font-display)}
 .quest-status{font-size:.75rem;padding:.2rem .6rem;border-radius:99px;background:var(--accent-dim);color:var(--accent);white-space:nowrap}
 .quest-status.completed{background:rgba(0,255,157,.15)}
-.achievement-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
-.achievement-card{display:flex;gap:.85rem;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition)}
-.achievement-card.unlocked{border-color:var(--accent);background:linear-gradient(135deg,rgba(0,255,157,.05),transparent)}
-.achievement-card.locked{opacity:.5}
-.ach-icon{font-size:1.5rem;width:40px;height:40px;display:grid;place-items:center;background:var(--surface-2);border-radius:var(--radius-sm);flex-shrink:0}
-.achievement-card.unlocked .ach-icon{background:var(--accent-dim)}
-.ach-name{font-weight:600;font-size:.85rem;margin-bottom:.15rem}
+
+/* ===== ACHIEVEMENTS ===== */
+.achievement-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.75rem}
+.achievement-card{display:flex;gap:.85rem;padding:1rem;background:linear-gradient(180deg,var(--chalkboard-light),var(--chalkboard));border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition)}
+.achievement-card.unlocked{border-color:var(--accent);background:linear-gradient(135deg,rgba(0,255,157,.06),var(--chalkboard))}
+.achievement-card.locked{opacity:.45}
+.ach-icon{font-size:1.4rem;width:40px;height:40px;display:grid;place-items:center;background:var(--chalkboard-dark);border-radius:var(--radius-sm);flex-shrink:0;color:var(--accent);font-family:var(--font-display);font-weight:800;border:1px solid var(--border)}
+.achievement-card.unlocked .ach-icon{background:var(--accent-dim);border-color:var(--accent)}
+.achievement-card.locked .ach-icon{color:var(--text-muted)}
+.ach-name{font-weight:600;font-size:.85rem;margin-bottom:.15rem;color:var(--chalk)}
 .ach-desc{font-size:.75rem;color:var(--text-muted)}
+
+/* ===== PROFILE ===== */
 .profile-header{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
-.avatar-lg{width:72px;height:72px;border-radius:50%;object-fit:cover;background:var(--surface-3);border:2px solid var(--border)}
+.avatar-lg{width:80px;height:80px;border-radius:50%;object-fit:cover;background:var(--wood-dark);border:3px solid var(--wood);box-shadow:0 0 20px rgba(0,255,157,.15)}
 .profile-info{flex:1}
-.profile-info h2{font-size:1.3rem;font-weight:700}
+.profile-info h2{font-size:1.3rem;font-weight:700;color:var(--chalk)}
 .title-badge{display:inline-block;font-size:.75rem;padding:.2rem .7rem;border-radius:99px;background:var(--accent-dim);color:var(--accent);margin-top:.25rem;font-weight:600}
 .profile-xp{text-align:center}
 .level-big{font-family:var(--font-display);font-size:2.2rem;font-weight:900;color:var(--accent);line-height:1}
-.title-collection{display:flex;flex-wrap:wrap;gap:.5rem}
-.title-chip{padding:.35rem .8rem;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition)}
-.title-chip:hover{border-color:var(--accent)}
+
+/* ELO badge */
+.elo-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .75rem;border-radius:99px;font-weight:700;font-size:.8rem;font-family:var(--font-display);letter-spacing:.03em;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.elo-bronze{color:#cd7f32}
+.elo-silver{color:#c0c0c0}
+.elo-gold{color:#ffd700}
+.elo-platinum{color:#66ffdd}
+.elo-diamond{color:#66ddff}
+.elo-master{color:#ff8844}
+.elo-grandmaster{color:#ff3366}
+
+/* Title tooltip */
+.title-collection{display:flex;flex-wrap:wrap;gap:.5rem;padding-top:.5rem}
+.title-chip{
+  position:relative;padding:.4rem .85rem;border-radius:99px;
+  background:var(--chalkboard-dark);border:1px solid var(--border);
+  font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition);
+  color:var(--chalk);
+}
+.title-chip:hover{border-color:var(--accent);transform:translateY(-1px)}
 .title-chip.equipped{background:var(--accent);color:#03110b;border-color:var(--accent)}
-.title-chip.locked{opacity:.4;cursor:not-allowed}
+.title-chip.locked{opacity:.45;cursor:not-allowed}
+.title-chip::after{
+  content:attr(data-req);
+  position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);
+  background:var(--wood-dark);color:var(--chalk);
+  border:1px solid var(--border-strong);border-radius:6px;
+  padding:6px 10px;font-size:.72rem;font-weight:500;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;
+  box-shadow:0 8px 20px rgba(0,0,0,.5);
+}
+.title-chip::before{
+  content:'';position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--border-strong);
+  opacity:0;transition:opacity .2s;z-index:20;
+}
+.title-chip:hover::after,.title-chip:hover::before{opacity:1}
+
+/* SETTINGS */
 .input-row{display:flex;gap:.5rem;margin-top:.5rem}
-.input-row input{flex:1;padding:.7rem 1rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.9rem;outline:none;font-family:inherit}
+.input-row input{flex:1;padding:.7rem 1rem;background:var(--chalkboard-dark);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.9rem;outline:none;font-family:inherit}
 .input-row input:focus{border-color:var(--accent)}
 .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;font-size:.9rem}
 .toggle-row input[type='checkbox']{width:18px;height:18px;accent-color:var(--accent)}
+
+/* TOASTS */
 .toast-container{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:.5rem;z-index:2000}
-.toast{padding:.85rem 1.2rem;background:var(--surface-3);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius-sm);font-size:.85rem;box-shadow:0 12px 40px rgba(0,0,0,.5);animation:slideIn .35s ease;max-width:340px}
+.toast{padding:.85rem 1.2rem;background:var(--chalkboard-light);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius-sm);font-size:.85rem;box-shadow:0 12px 40px rgba(0,0,0,.6);animation:slideIn .35s ease;max-width:340px;color:var(--chalk)}
 .toast.error{border-left-color:var(--danger)}
 .toast.achievement{border-left-color:var(--warning)}
 @keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
-@media (max-width:860px){
+
+/* CHALK DUST */
+.chalk-dust{position:absolute;width:2px;height:2px;background:rgba(232,232,208,.3);border-radius:50%;animation:chalkDrift linear infinite;pointer-events:none}
+@keyframes chalkDrift{from{transform:translateY(0) translateX(0)}to{transform:translateY(100vh) translateX(20px);opacity:0}}
+
+/* RESPONSIVE */
+@media (max-width:900px){
   .app{flex-direction:column}
-  .sidebar{width:100%;height:auto;position:static;flex-direction:row;align-items:center;padding:.75rem 1rem;overflow-x:auto}
-  .sidebar-brand{padding:0 1rem 0 0}
+  .sidebar{width:100%;height:auto;position:static;flex-direction:row;align-items:center;padding:.75rem 1rem;overflow-x:auto;border-right:none;border-bottom:2px solid var(--wood-dark)}
+  .sidebar-brand{padding:0 1rem 0 0;border:none;margin:0}
   .nav{flex-direction:row;gap:.25rem}
   .nav-item span:last-child{display:none}
   .nav-icon{font-size:1.2rem}
@@ -176,20 +356,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   .dashboard-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .result-time{font-size:3rem}
+  .monitor-screen{width:100%;max-width:360px;height:auto;aspect-ratio:42/25}
 }
 @media (max-width:480px){
   .stats-grid{grid-template-columns:1fr}
-  .play-stats{flex-direction:column;gap:.5rem}
+  .play-stats{flex-direction:column;gap:.5rem;align-items:center}
+  .monitor-screen{height:180px}
 }
 </style>
 </head>
 <body>
 
-<!-- AUTH OVERLAY -->
+<!-- AUTH -->
 <div id="auth-screen" class="auth-screen">
   <div class="auth-card">
     <h1 class="logo">ALT<span>//</span>TAB</h1>
-    <p class="tagline">Measure your reflexes. Climb the ranks.</p>
+    <p class="tagline">Reflexes are a dying art.</p>
     <div class="auth-tabs">
       <button id="tab-login" class="auth-tab active">Sign In</button>
       <button id="tab-signup" class="auth-tab">Create Account</button>
@@ -214,18 +396,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="app" class="app hidden">
   <aside class="sidebar">
     <div class="sidebar-brand"><h2 class="logo-small">ALT<span>//</span>TAB</h2></div>
     <nav class="nav">
-      <button class="nav-item active" data-section="dashboard"><span class="nav-icon">◈</span> Dashboard</button>
-      <button class="nav-item" data-section="play"><span class="nav-icon">▶</span> Play</button>
-      <button class="nav-item" data-section="leaderboard"><span class="nav-icon">▲</span> Leaderboard</button>
-      <button class="nav-item" data-section="quests"><span class="nav-icon">✦</span> Quests</button>
-      <button class="nav-item" data-section="achievements"><span class="nav-icon">◆</span> Achievements</button>
-      <button class="nav-item" data-section="profile"><span class="nav-icon">●</span> Profile</button>
-      <button class="nav-item" data-section="settings"><span class="nav-icon">⚙</span> Settings</button>
+      <button class="nav-item active" data-section="dashboard"><span class="nav-icon">◈</span> <span>Dashboard</span></button>
+      <button class="nav-item" data-section="play"><span class="nav-icon">▶</span> <span>Play</span></button>
+      <button class="nav-item" data-section="leaderboard"><span class="nav-icon">▲</span> <span>Leaderboard</span></button>
+      <button class="nav-item" data-section="quests"><span class="nav-icon">✦</span> <span>Quests</span></button>
+      <button class="nav-item" data-section="achievements"><span class="nav-icon">◆</span> <span>Achievements</span></button>
+      <button class="nav-item" data-section="profile"><span class="nav-icon">●</span> <span>Profile</span></button>
+      <button class="nav-item" data-section="settings"><span class="nav-icon">⚙</span> <span>Settings</span></button>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
@@ -243,12 +425,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <!-- DASHBOARD -->
     <section id="section-dashboard" class="section active">
       <h1 class="section-title">Dashboard</h1>
-      <p class="section-sub">Welcome back, <span id="dash-username">Player</span>.</p>
+      <p class="section-sub">Welcome back, <span id="dash-username">Player</span>. Grab a seat.</p>
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-label">Personal Best</div><div class="stat-value" id="dash-pb">—</div><div class="stat-unit">ms</div></div>
         <div class="stat-card"><div class="stat-label">Average</div><div class="stat-value" id="dash-avg">—</div><div class="stat-unit">ms</div></div>
         <div class="stat-card"><div class="stat-label">Total Attempts</div><div class="stat-value" id="dash-attempts">0</div></div>
-        <div class="stat-card"><div class="stat-label">Level</div><div class="stat-value" id="dash-level">1</div></div>
+        <div class="stat-card"><div class="stat-label">ELO</div><div class="stat-value"><span id="dash-elo-value">1000</span> <span id="dash-elo-badge" class="elo-badge elo-bronze" style="font-size:.6rem;padding:.1rem .4rem;vertical-align:middle">◇ Bronze</span></div></div>
       </div>
       <div class="xp-bar-wrap">
         <div class="xp-label"><span>XP Progress</span><span id="dash-xp-text">0 / 100</span></div>
@@ -257,7 +439,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="dashboard-grid">
         <div class="card">
           <h3>Quick Start</h3>
-          <p class="muted">Jump straight into a ranked attempt.</p>
+          <p class="muted">Straight into a ranked match. Full focus.</p>
           <button class="btn-primary btn-lg" id="dash-start-btn" style="margin-top:1rem">START</button>
         </div>
         <div class="card">
@@ -270,27 +452,66 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <!-- PLAY -->
     <section id="section-play" class="section">
       <h1 class="section-title">Play</h1>
-      <p class="section-sub">Click START, wait for the signal, then press Alt+Tab immediately.</p>
+      <p class="section-sub">Click START. Wait for the teacher's reflection — then Alt+Tab.</p>
       <div class="mode-toggle">
         <button class="mode-btn active" data-mode="ranked">Ranked</button>
         <button class="mode-btn" data-mode="practice">Practice</button>
       </div>
       <div id="game-area" class="game-area">
+        <!-- IDLE -->
         <div id="game-idle" class="game-state">
           <button id="start-btn" class="btn-start">START</button>
-          <p class="muted mt-1">Your reaction time will be measured from the signal to when the page loses visibility.</p>
+          <p class="muted mt-1">The timer starts the moment the teacher appears in the reflection.<br/>Press Alt+Tab as fast as humanly possible.</p>
         </div>
-        <div id="game-waiting" class="game-state hidden">
-          <div class="pulse-ring"></div>
-          <p class="waiting-text">Wait for the signal...</p>
+
+        <!-- PLAYING (waiting + signal) -->
+        <div id="game-playing" class="game-state hidden">
+          <div class="monitor" id="monitor">
+            <div class="monitor-frame">
+              <div class="monitor-screen">
+                <canvas id="game-canvas"></canvas>
+                <div class="scanlines"></div>
+                <div class="screen-glare"></div>
+                <div class="reflection reflection-player" id="reflection-player">
+                  <img id="reflection-avatar-img" src="" alt="" />
+                </div>
+                <div class="reflection reflection-teacher hidden" id="reflection-teacher">
+                  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="60" cy="48" rx="42" ry="38" fill="#8a8a8a"/>
+                    <circle cx="60" cy="12" r="14" fill="#7a7a7a"/>
+                    <ellipse cx="22" cy="62" rx="10" ry="20" fill="#8a8a8a"/>
+                    <ellipse cx="98" cy="62" rx="10" ry="20" fill="#8a8a8a"/>
+                    <ellipse cx="60" cy="66" rx="32" ry="35" fill="#f5d5b8"/>
+                    <path d="M 42 44 Q 60 40 78 44" stroke="#d4b395" fill="none" stroke-width="1.2"/>
+                    <path d="M 44 50 Q 60 47 76 50" stroke="#d4b395" fill="none" stroke-width="1.2"/>
+                    <path d="M 38 58 L 52 60" stroke="#4a3a2a" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M 68 60 L 82 58" stroke="#4a3a2a" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="45" cy="66" r="9" fill="rgba(220,230,240,0.15)" stroke="#333" stroke-width="2"/>
+                    <circle cx="75" cy="66" r="9" fill="rgba(220,230,240,0.15)" stroke="#333" stroke-width="2"/>
+                    <line x1="54" y1="66" x2="66" y2="66" stroke="#333" stroke-width="2"/>
+                    <line x1="36" y1="66" x2="25" y2="63" stroke="#333" stroke-width="2"/>
+                    <line x1="84" y1="66" x2="95" y2="63" stroke="#333" stroke-width="2"/>
+                    <circle cx="45" cy="66" r="3" fill="#333"/>
+                    <circle cx="75" cy="66" r="3" fill="#333"/>
+                    <path d="M 60 71 L 57 81 L 63 81" stroke="#d4b395" fill="none" stroke-width="1.5"/>
+                    <path d="M 48 91 Q 60 87 72 91" stroke="#8a3a3a" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M 42 89 Q 44 93 42 97" stroke="#d4b395" fill="none" stroke-width="1"/>
+                    <path d="M 78 89 Q 76 93 78 97" stroke="#d4b395" fill="none" stroke-width="1"/>
+                  </svg>
+                </div>
+                <div id="flash-overlay"></div>
+              </div>
+            </div>
+            <div class="monitor-stand"></div>
+          </div>
+          <p id="game-status-text" class="waiting-text">Playing... wait for it.</p>
         </div>
-        <div id="game-signal" class="game-state hidden">
-          <div class="signal-flash"></div>
-          <p class="signal-text">ALT+TAB NOW</p>
-        </div>
+
+        <!-- RESULT -->
         <div id="game-result" class="game-state hidden">
           <div class="result-time" id="result-time">—</div>
           <div class="result-unit">ms</div>
+          <div id="result-elo" class="result-elo"></div>
           <p id="result-msg" class="result-msg"></p>
           <div class="result-actions">
             <button id="retry-btn" class="btn-primary">Retry</button>
@@ -302,19 +523,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div><span class="muted">Latest:</span> <strong id="latest-rt">—</strong></div>
         <div><span class="muted">Best:</span> <strong id="best-rt">—</strong></div>
         <div><span class="muted">Average:</span> <strong id="avg-rt">—</strong></div>
+        <div><span class="muted">ELO:</span> <strong id="play-elo">1000</strong></div>
       </div>
     </section>
 
     <!-- LEADERBOARD -->
     <section id="section-leaderboard" class="section">
       <h1 class="section-title">Leaderboard</h1>
-      <p class="section-sub">Global rankings. Updated in real time.</p>
+      <p class="section-sub">Global rankings. Live from the classroom.</p>
       <div class="lb-filters">
         <button class="lb-filter active" data-filter="alltime">All-Time</button>
         <button class="lb-filter" data-filter="weekly">Weekly</button>
         <button class="lb-filter" data-filter="monthly">Monthly</button>
-        <button class="lb-filter" data-filter="attempts">Most Attempts</button>
-        <button class="lb-filter" data-filter="level">Highest Level</button>
+        <button class="lb-filter" data-filter="elo">ELO</button>
+        <button class="lb-filter" data-filter="attempts">Attempts</button>
+        <button class="lb-filter" data-filter="level">Level</button>
       </div>
       <div id="leaderboard-list" class="leaderboard-list"><p class="muted">Loading...</p></div>
     </section>
@@ -322,7 +545,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <!-- QUESTS -->
     <section id="section-quests" class="section">
       <h1 class="section-title">Quests</h1>
-      <p class="section-sub">Complete objectives to earn XP and unlock titles.</p>
+      <p class="section-sub">Homework, but fun.</p>
       <h2 class="sub-heading">Daily</h2>
       <div id="daily-quests" class="quest-grid"></div>
       <h2 class="sub-heading">Weekly</h2>
@@ -332,7 +555,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <!-- ACHIEVEMENTS -->
     <section id="section-achievements" class="section">
       <h1 class="section-title">Achievements</h1>
-      <p class="section-sub">Your permanent collection of milestones.</p>
+      <p class="section-sub">Permanent trophies from your time in class.</p>
       <div id="achievement-grid" class="achievement-grid"></div>
     </section>
 
@@ -344,7 +567,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="profile-info">
           <h2 id="profile-username">—</h2>
           <div id="profile-title" class="title-badge">No Title</div>
-          <p id="profile-joined" class="muted"></p>
+          <div style="margin-top:.5rem"><span id="profile-elo-badge" class="elo-badge elo-bronze">◇ Bronze · 1000</span></div>
+          <p id="profile-joined" class="muted" style="margin-top:.5rem"></p>
         </div>
         <div class="profile-xp">
           <div class="level-big" id="profile-level">1</div>
@@ -355,10 +579,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="stat-card"><div class="stat-label">Personal Best</div><div class="stat-value" id="profile-pb">—</div></div>
         <div class="stat-card"><div class="stat-label">Average</div><div class="stat-value" id="profile-avg">—</div></div>
         <div class="stat-card"><div class="stat-label">Attempts</div><div class="stat-value" id="profile-attempts">0</div></div>
-        <div class="stat-card"><div class="stat-label">Total XP</div><div class="stat-value" id="profile-xp">0</div></div>
+        <div class="stat-card"><div class="stat-label">Peak ELO</div><div class="stat-value" id="profile-elo-peak">1000</div></div>
       </div>
       <div class="card mt-2">
         <h3>Title Collection</h3>
+        <p class="muted" style="margin-bottom:.5rem">Hover any title to see how it's unlocked.</p>
         <div id="title-collection" class="title-collection"></div>
       </div>
     </section>
@@ -384,7 +609,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="card mt-1">
         <h3>Sound & Theme</h3>
         <label class="toggle-row"><span>Sound effects</span><input type="checkbox" id="setting-sound" checked /></label>
-        <label class="toggle-row"><span>Dark theme</span><input type="checkbox" id="setting-dark" checked disabled /></label>
+        <label class="toggle-row"><span>Classroom theme</span><input type="checkbox" id="setting-dark" checked disabled /></label>
       </div>
     </section>
   </main>
@@ -413,16 +638,14 @@ import {
   query, orderBy, limit, getDocs, where, serverTimestamp, arrayUnion
 } from "firebase/firestore";
 
-/* =========================================================
-   FIREBASE CONFIG — REPLACE WITH YOUR OWN VALUES
-   ========================================================= */
+/* ========= FIREBASE CONFIG ========= */
 const firebaseConfig = {
-  apiKey: "AIzaSyAGOMsBrsARJSlA3o-kFZ1TCsUu3Kjnxtc",
-  authDomain: "alt-tab-fb.firebaseapp.com",
-  projectId: "alt-tab-fb",
-  storageBucket: "alt-tab-fb.firebasestorage.app",
-  messagingSenderId: "974791907183",
-  appId: "1:974791907183:web:9ae43bf8747b1c46333a9a"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 let auth, db;
@@ -432,12 +655,10 @@ try {
   db = getFirestore(app);
 } catch (e) {
   console.error("Firebase init failed:", e);
-  alert("Firebase is not configured. Edit firebaseConfig in this file.");
+  alert("Edit firebaseConfig in this file with your project values.");
 }
 
-/* =========================================================
-   UI HELPERS
-   ========================================================= */
+/* ========= UI HELPERS ========= */
 function showToast(message, type = "info") {
   const container = document.getElementById("toast-container");
   if (!container) return;
@@ -453,9 +674,61 @@ function showToast(message, type = "info") {
   }, 4000);
 }
 
-/* =========================================================
-   PROFILE / XP
-   ========================================================= */
+/* ========= SOUND ========= */
+let audioCtx = null;
+function playSound(type) {
+  try {
+    const enabled = localStorage.getItem("at-sound") !== "0";
+    if (!enabled) return;
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    if (type === "signal") {
+      osc.type = "square"; osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.35);
+    } else if (type === "success") {
+      osc.type = "sine"; osc.frequency.value = 660;
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+    } else if (type === "error") {
+      osc.type = "sawtooth"; osc.frequency.value = 180;
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+    }
+  } catch (e) {}
+}
+
+/* ========= ELO SYSTEM ========= */
+function eloRank(elo) {
+  if (elo >= 2200) return { name: "Grandmaster", cls: "elo-grandmaster", symbol: "♛" };
+  if (elo >= 1900) return { name: "Master", cls: "elo-master", symbol: "✧" };
+  if (elo >= 1650) return { name: "Diamond", cls: "elo-diamond", symbol: "◆" };
+  if (elo >= 1400) return { name: "Platinum", cls: "elo-platinum", symbol: "✶" };
+  if (elo >= 1200) return { name: "Gold", cls: "elo-gold", symbol: "★" };
+  if (elo >= 1050) return { name: "Silver", cls: "elo-silver", symbol: "✦" };
+  return { name: "Bronze", cls: "elo-bronze", symbol: "◇" };
+}
+
+function calcEloChange(currentElo, rt) {
+  // Higher ELO = lower targetRT = harder to gain
+  const targetRT = Math.max(180, 500 - (currentElo - 1000) * 0.15);
+  const delta = Math.round(32 * (targetRT - rt) / 100);
+  const newElo = Math.max(100, currentElo + delta);
+  return { delta, targetRT, newElo: Math.round(newElo) };
+}
+
+function updateEloBadge(el, elo) {
+  const r = eloRank(elo);
+  el.className = "elo-badge " + r.cls;
+  el.textContent = `${r.symbol} ${r.name} · ${elo}`;
+}
+
+/* ========= PROFILE / XP ========= */
 function xpToReachLevel(level) {
   if (level <= 1) return 0;
   return Math.floor(100 * Math.pow(level - 1, 2.2));
@@ -481,13 +754,25 @@ async function equipTitle(uid, title) {
   if (!snap.exists()) return;
   const data = snap.data();
   if (!(data.unlockedTitles || []).includes(title)) {
-    showToast("Title not unlocked.", "error");
-    return;
+    showToast("Title not unlocked.", "error"); return;
   }
   await updateDoc(doc(db, "users", uid), { equippedTitle: title });
   showToast(`Equipped: ${title}`);
   window.dispatchEvent(new CustomEvent("profile-updated"));
 }
+
+const TITLE_REQUIREMENTS = {
+  "Beginner": "Create an account",
+  "Quick Fingers": "Complete 10 attempts",
+  "Speed Demon": "Reaction below 400ms",
+  "Lightning": "Reaction below 300ms",
+  "Unreasonably Fast": "Reaction below 200ms",
+  "Elite": "Reach level 25",
+  "Dedicated": "Complete 500 attempts",
+  "Perfectionist": "Achieve 10 personal bests",
+  "Veteran": "Play for 30 different days",
+  "Untouchable": "Reach the top 10 leaderboard"
+};
 
 function renderProfile(data) {
   if (!data) return;
@@ -497,11 +782,13 @@ function renderProfile(data) {
   document.getElementById("profile-pb").textContent = data.personalBest ? `${data.personalBest} ms` : "—";
   document.getElementById("profile-avg").textContent = data.averageReaction ? `${data.averageReaction} ms` : "—";
   document.getElementById("profile-attempts").textContent = data.totalAttempts || 0;
-  document.getElementById("profile-xp").textContent = data.xp || 0;
+  document.getElementById("profile-elo-peak").textContent = data.eloPeak || data.elo || 1000;
   const avatar = document.getElementById("profile-avatar");
   if (avatar) avatar.src = data.avatar || "";
   const joined = data.createdAt?.toDate?.();
   if (joined) document.getElementById("profile-joined").textContent = `Joined ${joined.toLocaleDateString()}`;
+  const eloBadge = document.getElementById("profile-elo-badge");
+  if (eloBadge) updateEloBadge(eloBadge, data.elo || 1000);
   renderTitles(data);
 }
 
@@ -513,9 +800,11 @@ function renderTitles(data) {
   allTitles.forEach((title) => {
     const unlocked = (data.unlockedTitles || []).includes(title);
     const equipped = data.equippedTitle === title;
+    const req = TITLE_REQUIREMENTS[title] || "";
     const chip = document.createElement("span");
     chip.className = `title-chip${unlocked ? "" : " locked"}${equipped ? " equipped" : ""}`;
     chip.textContent = title;
+    chip.setAttribute("data-req", unlocked ? `Equipped by clicking` : `Unlock: ${req}`);
     if (unlocked) chip.addEventListener("click", () => equipTitle(data.uid || data.id, title));
     container.appendChild(chip);
   });
@@ -527,14 +816,14 @@ function updateDashboard(data) {
   document.getElementById("dash-pb").textContent = data.personalBest ?? "—";
   document.getElementById("dash-avg").textContent = data.averageReaction ?? "—";
   document.getElementById("dash-attempts").textContent = data.totalAttempts || 0;
-  document.getElementById("dash-level").textContent = data.level || 1;
+  const elo = data.elo || 1000;
+  document.getElementById("dash-elo-value").textContent = elo;
+  updateEloBadge(document.getElementById("dash-elo-badge"), elo);
   const xp = data.xp || 0;
   const level = data.level || 1;
-  const currentThreshold = xpToReachLevel(level);
-  const nextThreshold = xpForNextLevel(level);
-  const progress = nextThreshold > currentThreshold
-    ? ((xp - currentThreshold) / (nextThreshold - currentThreshold)) * 100 : 0;
-  document.getElementById("dash-xp-text").textContent = `${xp - currentThreshold} / ${nextThreshold - currentThreshold}`;
+  const cur = xpToReachLevel(level), next = xpForNextLevel(level);
+  const progress = next > cur ? ((xp - cur) / (next - cur)) * 100 : 0;
+  document.getElementById("dash-xp-text").textContent = `${xp - cur} / ${next - cur}`;
   document.getElementById("dash-xp-fill").style.width = `${Math.min(progress, 100)}%`;
   document.getElementById("sidebar-username").textContent = data.username || "—";
   document.getElementById("sidebar-level").textContent = `Lv. ${data.level || 1}`;
@@ -543,6 +832,9 @@ function updateDashboard(data) {
   document.getElementById("latest-rt").textContent = data.lastReactionTime ? `${data.lastReactionTime} ms` : "—";
   document.getElementById("best-rt").textContent = data.personalBest ? `${data.personalBest} ms` : "—";
   document.getElementById("avg-rt").textContent = data.averageReaction ? `${data.averageReaction} ms` : "—";
+  document.getElementById("play-elo").textContent = elo;
+  const ref = document.getElementById("reflection-avatar-img");
+  if (ref) ref.src = data.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(data.username||"player")}`;
 }
 
 async function loadRecentAttempts(uid) {
@@ -560,9 +852,7 @@ async function loadRecentAttempts(uid) {
   } catch (e) { console.error(e); }
 }
 
-/* =========================================================
-   AUTH
-   ========================================================= */
+/* ========= AUTH ========= */
 const googleProvider = new GoogleAuthProvider();
 
 async function createUserProfile(uid, username, email) {
@@ -570,12 +860,12 @@ async function createUserProfile(uid, username, email) {
     uid, username, email: email || "",
     avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(username)}`,
     level: 1, xp: 0, totalAttempts: 0, personalBest: null, averageReaction: null,
+    elo: 1000, eloPeak: 1000,
     equippedTitle: "Beginner", unlockedTitles: ["Beginner"],
     achievements: [], createdAt: serverTimestamp(), lastPlayed: serverTimestamp(),
     soundEnabled: true
   });
 }
-
 async function signUp(email, password, username) {
   const cred = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(cred.user, { displayName: username });
@@ -590,16 +880,14 @@ async function signInWithGoogle() {
   const user = cred.user;
   const snap = await getDoc(doc(db, "users", user.uid));
   if (!snap.exists()) {
-    const username = user.displayName || `Player_${user.uid.slice(0, 6)}`;
+    const username = user.displayName || `Player_${user.uid.slice(0,6)}`;
     await createUserProfile(user.uid, username, user.email);
   }
   return user;
 }
 async function logOut() { await signOut(auth); }
 
-/* =========================================================
-   QUESTS
-   ========================================================= */
+/* ========= QUESTS ========= */
 const DAILY_QUESTS = [
   { id: "daily_attempts_10", title: "Warm Up", desc: "Complete 10 attempts", target: 10, xp: 50, type: "attempts" },
   { id: "daily_sub500", title: "Sub-500", desc: "Achieve a reaction below 500ms", target: 1, xp: 75, type: "sub500" },
@@ -626,11 +914,7 @@ async function ensureQuestDocs(uid, period, periodKey) {
     const ref = doc(db, "users", uid, "quests", `${def.id}_${periodKey}`);
     const snap = await getDoc(ref);
     if (!snap.exists()) {
-      await setDoc(ref, {
-        questId: def.id, period, periodKey, progress: 0,
-        completed: false, claimed: false, expiresAt: periodKey,
-        updatedAt: serverTimestamp()
-      });
+      await setDoc(ref, { questId: def.id, period, periodKey, progress: 0, completed: false, claimed: false, expiresAt: periodKey, updatedAt: serverTimestamp() });
     }
   }
 }
@@ -645,14 +929,11 @@ async function fetchQuestProgress(uid, period, periodKey) {
   return results;
 }
 async function loadQuests(uid) {
-  const dailyKey = getPeriodKey("daily");
-  const weeklyKey = getPeriodKey("weekly");
-  await ensureQuestDocs(uid, "daily", dailyKey);
-  await ensureQuestDocs(uid, "weekly", weeklyKey);
-  const daily = await fetchQuestProgress(uid, "daily", dailyKey);
-  const weekly = await fetchQuestProgress(uid, "weekly", weeklyKey);
-  renderQuests("daily", daily);
-  renderQuests("weekly", weekly);
+  const dK = getPeriodKey("daily"), wK = getPeriodKey("weekly");
+  await ensureQuestDocs(uid, "daily", dK);
+  await ensureQuestDocs(uid, "weekly", wK);
+  renderQuests("daily", await fetchQuestProgress(uid, "daily", dK));
+  renderQuests("weekly", await fetchQuestProgress(uid, "weekly", wK));
 }
 function renderQuests(period, quests) {
   const container = document.getElementById(`${period}-quests`);
@@ -674,10 +955,8 @@ function renderQuests(period, quests) {
   });
 }
 async function updateQuestProgress(uid, event) {
-  const dailyKey = getPeriodKey("daily");
-  const weeklyKey = getPeriodKey("weekly");
-  await updatePeriodQuests(uid, "daily", dailyKey, event);
-  await updatePeriodQuests(uid, "weekly", weeklyKey, event);
+  await updatePeriodQuests(uid, "daily", getPeriodKey("daily"), event);
+  await updatePeriodQuests(uid, "weekly", getPeriodKey("weekly"), event);
 }
 async function updatePeriodQuests(uid, period, periodKey, event) {
   const defs = getQuestDefs(period);
@@ -694,26 +973,24 @@ async function updatePeriodQuests(uid, period, periodKey, event) {
     else if (def.type === "sub400" && event.reactionTime < 400) inc = 1;
     else if (def.type === "pb" && event.isPB) inc = 1;
     if (inc > 0) {
-      const newProgress = Math.min(data.progress + inc, def.target);
-      const completed = newProgress >= def.target;
-      await updateDoc(ref, { progress: newProgress, completed, updatedAt: serverTimestamp() });
-      if (completed) showToast(`Quest complete: ${def.title}`, "achievement");
+      const np = Math.min(data.progress + inc, def.target);
+      const done = np >= def.target;
+      await updateDoc(ref, { progress: np, completed: done, updatedAt: serverTimestamp() });
+      if (done) showToast(`Quest complete: ${def.title}`, "achievement");
     }
   }
 }
 
-/* =========================================================
-   ACHIEVEMENTS & TITLES
-   ========================================================= */
+/* ========= ACHIEVEMENTS (SYMBOLS, NO EMOJIS) ========= */
 const ACHIEVEMENTS = [
-  { id: "first_attempt", name: "First Attempt", desc: "Complete your first attempt", icon: "🎯" },
-  { id: "getting_faster", name: "Getting Faster", desc: "Improve your personal best", icon: "📈" },
-  { id: "speedster", name: "Speedster", desc: "Reach below 400ms", icon: "⚡" },
-  { id: "insane_reflexes", name: "Insane Reflexes", desc: "Reach below 250ms", icon: "🔥" },
-  { id: "addicted", name: "Addicted", desc: "Complete 1,000 attempts", icon: "💀" },
-  { id: "consistent", name: "Consistent", desc: "Play for 7 consecutive days", icon: "📅" },
-  { id: "top_100", name: "Top 100", desc: "Enter the global top 100", icon: "🏅" },
-  { id: "champion", name: "Champion", desc: "Reach the top 10", icon: "👑" }
+  { id: "first_attempt", name: "First Attempt", desc: "Complete your first attempt", icon: "⊙" },
+  { id: "getting_faster", name: "Getting Faster", desc: "Improve your personal best", icon: "↑" },
+  { id: "speedster", name: "Speedster", desc: "Reach below 400ms", icon: "↯" },
+  { id: "insane_reflexes", name: "Insane Reflexes", desc: "Reach below 250ms", icon: "✦" },
+  { id: "addicted", name: "Addicted", desc: "Complete 1,000 attempts", icon: "◈" },
+  { id: "consistent", name: "Consistent", desc: "Play for 7 consecutive days", icon: "▤" },
+  { id: "top_100", name: "Top 100", desc: "Enter the global top 100", icon: "★" },
+  { id: "champion", name: "Champion", desc: "Reach the top 10", icon: "♛" }
 ];
 
 function renderAchievements(unlockedIds = []) {
@@ -725,7 +1002,7 @@ function renderAchievements(unlockedIds = []) {
     const card = document.createElement("div");
     card.className = `achievement-card ${unlocked ? "unlocked" : "locked"}`;
     card.innerHTML = `
-      <div class="ach-icon">${unlocked ? ach.icon : "🔒"}</div>
+      <div class="ach-icon">${ach.icon}</div>
       <div>
         <div class="ach-name">${ach.name}</div>
         <div class="ach-desc">${ach.desc}</div>
@@ -740,7 +1017,7 @@ async function checkAchievements(uid, stats) {
   if (!snap.exists()) return;
   const data = snap.data();
   const unlocked = data.achievements || [];
-  const unlockedTitles = data.unlockedTitles || ["Beginner"];
+  const titles = data.unlockedTitles || ["Beginner"];
   const toUnlock = [];
   const titlesToUnlock = [];
 
@@ -751,19 +1028,19 @@ async function checkAchievements(uid, stats) {
   check("insane_reflexes", stats.reactionTime < 250);
   check("addicted", stats.totalAttempts >= 1000);
 
-  const checkTitle = (t, cond) => { if (!unlockedTitles.includes(t) && cond) titlesToUnlock.push(t); };
-  checkTitle("Quick Fingers", stats.totalAttempts >= 10);
-  checkTitle("Speed Demon", data.personalBest && data.personalBest < 400);
-  checkTitle("Lightning", data.personalBest && data.personalBest < 300);
-  checkTitle("Unreasonably Fast", data.personalBest && data.personalBest < 200);
-  checkTitle("Elite", data.level >= 25);
-  checkTitle("Dedicated", stats.totalAttempts >= 500);
+  const ckT = (t, cond) => { if (!titles.includes(t) && cond) titlesToUnlock.push(t); };
+  ckT("Quick Fingers", stats.totalAttempts >= 10);
+  ckT("Speed Demon", data.personalBest && data.personalBest < 400);
+  ckT("Lightning", data.personalBest && data.personalBest < 300);
+  ckT("Unreasonably Fast", data.personalBest && data.personalBest < 200);
+  ckT("Elite", data.level >= 25);
+  ckT("Dedicated", stats.totalAttempts >= 500);
 
   if (toUnlock.length) {
     await updateDoc(ref, { achievements: arrayUnion(...toUnlock) });
     toUnlock.forEach(id => {
-      const ach = ACHIEVEMENTS.find(a => a.id === id);
-      if (ach) showToast(`Achievement: ${ach.name}`, "achievement");
+      const a = ACHIEVEMENTS.find(x => x.id === id);
+      if (a) showToast(`Achievement: ${a.name}`, "achievement");
     });
   }
   if (titlesToUnlock.length) {
@@ -772,23 +1049,126 @@ async function checkAchievements(uid, stats) {
   }
 }
 
-/* =========================================================
-   GAME
-   ========================================================= */
-let currentUser = null;
-let currentUserData = null;
+/* ========= MINI GAME (CANVAS ANIMATION) ========= */
+class MiniGame {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
+    this.running = false;
+    this.stars = [];
+    this.enemies = [];
+    this.player = { x: 0, y: 0 };
+    this.lastEnemy = 0;
+    this.startTime = 0;
+    this.resize = this.resize.bind(this);
+    this.animate = this.animate.bind(this);
+    this.resize();
+    window.addEventListener("resize", this.resize);
+  }
+  resize() {
+    const rect = this.canvas.getBoundingClientRect();
+    this.canvas.width = Math.max(300, rect.width * 2);
+    this.canvas.height = Math.max(200, rect.height * 2);
+    this.W = this.canvas.width;
+    this.H = this.canvas.height;
+    this.player.x = this.W / 2;
+    this.player.y = this.H - 40;
+    this.stars = [];
+    for (let i = 0; i < 80; i++) {
+      this.stars.push({
+        x: Math.random() * this.W,
+        y: Math.random() * this.H,
+        speed: 0.5 + Math.random() * 1.8,
+        size: 1 + Math.random() * 2
+      });
+    }
+  }
+  start() {
+    if (this.running) return;
+    this.running = true;
+    this.enemies = [];
+    this.startTime = performance.now();
+    this.lastEnemy = 0;
+    this.animate();
+  }
+  stop() {
+    this.running = false;
+  }
+  animate() {
+    if (!this.running) return;
+    const now = performance.now();
+    const ctx = this.ctx;
+    ctx.fillStyle = "#0a1410";
+    ctx.fillRect(0, 0, this.W, this.H);
+
+    // Stars
+    ctx.fillStyle = "rgba(232,232,208,0.5)";
+    this.stars.forEach(s => {
+      s.y += s.speed;
+      if (s.y > this.H) { s.y = 0; s.x = Math.random() * this.W; }
+      ctx.fillRect(s.x, s.y, s.size, s.size);
+    });
+
+    // Move player
+    this.player.x = this.W / 2 + Math.sin(now / 900) * this.W * 0.3;
+
+    // Enemies
+    if (now - this.lastEnemy > 700) {
+      this.enemies.push({
+        x: Math.random() * this.W,
+        y: -20,
+        speed: 2 + Math.random() * 2.5,
+        size: 8 + Math.random() * 8
+      });
+      this.lastEnemy = now;
+    }
+    this.enemies.forEach(e => e.y += e.speed);
+    this.enemies = this.enemies.filter(e => e.y < this.H + 30);
+
+    ctx.fillStyle = "#ff4d6a";
+    this.enemies.forEach(e => {
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Player triangle
+    ctx.fillStyle = "#00ff9d";
+    ctx.shadowColor = "#00ff9d";
+    ctx.shadowBlur = 20;
+    ctx.beginPath();
+    ctx.moveTo(this.player.x, this.player.y - 22);
+    ctx.lineTo(this.player.x - 16, this.player.y + 10);
+    ctx.lineTo(this.player.x + 16, this.player.y + 10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // HUD
+    ctx.fillStyle = "rgba(232,232,208,0.9)";
+    ctx.font = "bold 24px monospace";
+    ctx.fillText("SCORE " + Math.floor((now - this.startTime) / 100), 20, 40);
+    ctx.font = "bold 16px monospace";
+    ctx.fillStyle = "rgba(0,255,157,0.7)";
+    ctx.fillText("LIVES 3", 20, 70);
+
+    requestAnimationFrame(this.animate);
+  }
+}
+let miniGame = null;
+
+/* ========= GAME LOGIC ========= */
+let currentUser = null, currentUserData = null;
 let gameState = "idle";
 let signalTime = 0;
 let waitTimeout = null;
 let currentMode = "ranked";
-let lastReactionTime = null;
-
-const MIN_RT = 80;
-const MAX_RT = 15000;
+const MIN_RT = 80, MAX_RT = 15000;
 
 function initGame(user) {
   currentUser = user;
   document.addEventListener("visibilitychange", handleVisibility);
+  if (!miniGame) miniGame = new MiniGame(document.getElementById("game-canvas"));
 }
 
 function handleVisibility() {
@@ -797,7 +1177,7 @@ function handleVisibility() {
       const rt = Math.round(performance.now() - signalTime);
       finishAttempt(rt);
     } else if (gameState === "waiting") {
-      falseStart("You tabbed away before the signal appeared.");
+      falseStart("You tabbed away before the teacher appeared.");
     }
   }
 }
@@ -807,32 +1187,42 @@ function startGame(mode = "ranked") {
   if (!currentUser) { showToast("Sign in to play.", "error"); return; }
   currentMode = mode;
   gameState = "waiting";
-  lastReactionTime = null;
   updateGameUI("waiting");
+  if (miniGame) miniGame.start();
   const delay = 1500 + Math.random() * 3500;
   waitTimeout = setTimeout(() => {
     signalTime = performance.now();
     gameState = "signal";
     updateGameUI("signal");
+    playSound("signal");
+    // flash
+    const flash = document.getElementById("flash-overlay");
+    if (flash) {
+      flash.className = "signal-flash-overlay";
+      setTimeout(() => { flash.className = ""; }, 500);
+    }
   }, delay);
 }
 
 function falseStart(message) {
   clearTimeout(waitTimeout);
   gameState = "result";
+  if (miniGame) miniGame.stop();
   updateGameUI("result", { time: null, message });
   showToast(message, "error");
+  playSound("error");
 }
 
 async function finishAttempt(rt) {
   clearTimeout(waitTimeout);
   gameState = "result";
+  if (miniGame) miniGame.stop();
   if (rt < MIN_RT || rt > MAX_RT) {
     updateGameUI("result", { time: rt, message: "Invalid reaction time — ignored." });
+    playSound("error");
     return;
   }
-  lastReactionTime = rt;
-  updateGameUI("result", { time: rt, message: "" });
+  updateGameUI("result", { time: rt, message: "Saving..." });
   await saveAttempt(rt);
 }
 
@@ -846,6 +1236,16 @@ async function saveAttempt(rt) {
     const totalAttempts = (data.totalAttempts || 0) + 1;
     let newAvg = data.averageReaction == null ? rt
       : Math.round((data.averageReaction * (totalAttempts - 1) + rt) / totalAttempts);
+
+    const oldElo = data.elo || 1000;
+    let newElo = oldElo, eloDelta = 0;
+    if (currentMode === "ranked") {
+      const r = calcEloChange(oldElo, rt);
+      newElo = r.newElo;
+      eloDelta = r.delta;
+    }
+    const newEloPeak = Math.max(data.eloPeak || 1000, newElo);
+
     const xpGain = (currentMode === "ranked" ? 10 : 5) + (isPB && data.totalAttempts > 0 ? 50 : 0);
     const newXp = (data.xp || 0) + xpGain;
     let newLevel = 1;
@@ -857,6 +1257,8 @@ async function saveAttempt(rt) {
       averageReaction: newAvg,
       xp: newXp,
       level: newLevel,
+      elo: newElo,
+      eloPeak: newEloPeak,
       lastReactionTime: rt,
       lastPlayed: serverTimestamp()
     });
@@ -865,7 +1267,6 @@ async function saveAttempt(rt) {
       reactionTime: rt, timestamp: serverTimestamp(), gameMode: currentMode
     });
 
-    // Also record in global leaderboard collection (used for weekly/monthly)
     if (currentMode === "ranked") {
       await addDoc(collection(db, "leaderboard"), {
         userId: currentUser.uid,
@@ -877,39 +1278,87 @@ async function saveAttempt(rt) {
       });
     }
 
-    await updateQuestProgress(currentUser.uid, {
-      type: "attempt", reactionTime: rt, mode: currentMode, isPB
-    });
-    await checkAchievements(currentUser.uid, { reactionTime: rt, totalAttempts, isPB });
+    try { await updateQuestProgress(currentUser.uid, { type: "attempt", reactionTime: rt, mode: currentMode, isPB }); }
+    catch (e) { console.warn("quest", e); }
+    try { await checkAchievements(currentUser.uid, { reactionTime: rt, totalAttempts, isPB }); }
+    catch (e) { console.warn("ach", e); }
+
+    // Show result ELO
+    const eloEl = document.getElementById("result-elo");
+    if (eloEl) {
+      if (currentMode === "ranked") {
+        const sign = eloDelta >= 0 ? "+" : "";
+        eloEl.innerHTML = `<span class="${eloDelta >= 0 ? "elo-up" : "elo-down"}">ELO ${sign}${eloDelta}</span> <span class="muted">(${oldElo} → ${newElo})</span>`;
+      } else {
+        eloEl.innerHTML = `<span class="muted">Practice — no ELO change</span>`;
+      }
+    }
+    const msgEl = document.getElementById("result-msg");
+    if (msgEl) msgEl.textContent = isPB && data.totalAttempts > 0 ? "New personal best!" : "";
 
     if (isPB && data.totalAttempts > 0) showToast("New personal best!", "achievement");
+    playSound("success");
     window.dispatchEvent(new CustomEvent("profile-updated"));
     await loadRecentAttempts(currentUser.uid);
   } catch (e) {
     console.error("Failed to save attempt:", e);
     showToast("Failed to save attempt. Check connection.", "error");
+    const msgEl = document.getElementById("result-msg");
+    if (msgEl) msgEl.textContent = "Save failed. Check console.";
   }
 }
 
 function updateGameUI(phase, data = {}) {
   const idle = document.getElementById("game-idle");
-  const waiting = document.getElementById("game-waiting");
-  const signal = document.getElementById("game-signal");
+  const playing = document.getElementById("game-playing");
   const result = document.getElementById("game-result");
-  [idle, waiting, signal, result].forEach(el => el.classList.add("hidden"));
+  [idle, playing, result].forEach(el => el && el.classList.add("hidden"));
 
-  if (phase === "idle") idle.classList.remove("hidden");
-  else if (phase === "waiting") waiting.classList.remove("hidden");
-  else if (phase === "signal") signal.classList.remove("hidden");
-  else if (phase === "result") {
-    result.classList.remove("hidden");
-    document.getElementById("result-time").textContent = data.time != null ? data.time : "—";
-    document.getElementById("result-msg").textContent = data.message || "";
+  if (phase === "idle") { idle && idle.classList.remove("hidden"); return; }
+  if (phase === "result") {
+    result && result.classList.remove("hidden");
+    const rtEl = document.getElementById("result-time");
+    const msgEl = document.getElementById("result-msg");
+    const eloEl = document.getElementById("result-elo");
+    if (rtEl) rtEl.textContent = data.time != null ? data.time : "—";
+    if (msgEl) msgEl.textContent = data.message || "";
+    if (eloEl) eloEl.innerHTML = "";
     if (data.time != null) {
       document.getElementById("latest-rt").textContent = `${data.time} ms`;
       const bestEl = document.getElementById("best-rt");
       const cur = bestEl.textContent.replace(" ms", "");
       if (cur === "—" || data.time < parseInt(cur)) bestEl.textContent = `${data.time} ms`;
+    }
+    return;
+  }
+
+  // waiting or signal — same monitor, different overlay
+  playing && playing.classList.remove("hidden");
+  const monitor = document.getElementById("monitor");
+  const playerRef = document.getElementById("reflection-player");
+  const teacherRef = document.getElementById("reflection-teacher");
+  const statusText = document.getElementById("game-status-text");
+  const flash = document.getElementById("flash-overlay");
+
+  if (phase === "signal") {
+    monitor && monitor.classList.add("monitor-signal");
+    playerRef && playerRef.classList.add("hidden");
+    teacherRef && teacherRef.classList.remove("hidden");
+    if (statusText) {
+      statusText.textContent = "THE TEACHER IS COMING — ALT+TAB NOW";
+      statusText.className = "signal-text";
+    }
+    if (flash) {
+      flash.className = "signal-flash-overlay";
+      setTimeout(() => { flash.className = ""; }, 500);
+    }
+  } else {
+    monitor && monitor.classList.remove("monitor-signal");
+    playerRef && playerRef.classList.remove("hidden");
+    teacherRef && teacherRef.classList.add("hidden");
+    if (statusText) {
+      statusText.textContent = "Playing... wait for it.";
+      statusText.className = "waiting-text";
     }
   }
 }
@@ -917,6 +1366,7 @@ function updateGameUI(phase, data = {}) {
 function resetGame() {
   clearTimeout(waitTimeout);
   gameState = "idle";
+  if (miniGame) miniGame.stop();
   updateGameUI("idle");
 }
 
@@ -936,11 +1386,8 @@ function bindGameUI() {
   });
 }
 
-/* =========================================================
-   LEADERBOARD
-   ========================================================= */
+/* ========= LEADERBOARD ========= */
 let currentFilter = "alltime";
-
 function initLeaderboard() {
   document.querySelectorAll(".lb-filter").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -958,28 +1405,20 @@ async function loadLeaderboard(filter = "alltime") {
   list.innerHTML = '<p class="muted">Loading...</p>';
   try {
     let q;
-    if (filter === "alltime") {
-      q = query(collection(db, "users"), where("personalBest", "!=", null), orderBy("personalBest", "asc"), limit(50));
-    } else if (filter === "attempts") {
-      q = query(collection(db, "users"), orderBy("totalAttempts", "desc"), limit(50));
-    } else if (filter === "level") {
-      q = query(collection(db, "users"), orderBy("level", "desc"), limit(50));
-    } else {
+    if (filter === "alltime") q = query(collection(db, "users"), where("personalBest", "!=", null), orderBy("personalBest", "asc"), limit(50));
+    else if (filter === "attempts") q = query(collection(db, "users"), orderBy("totalAttempts", "desc"), limit(50));
+    else if (filter === "level") q = query(collection(db, "users"), orderBy("level", "desc"), limit(50));
+    else if (filter === "elo") q = query(collection(db, "users"), orderBy("elo", "desc"), limit(50));
+    else {
       const now = new Date();
       let start;
-      if (filter === "weekly") {
-        start = new Date(now);
-        start.setDate(now.getDate() - now.getDay());
-        start.setHours(0, 0, 0, 0);
-      } else {
-        start = new Date(now.getFullYear(), now.getMonth(), 1);
-      }
+      if (filter === "weekly") { start = new Date(now); start.setDate(now.getDate() - now.getDay()); start.setHours(0,0,0,0); }
+      else start = new Date(now.getFullYear(), now.getMonth(), 1);
       q = query(collection(db, "leaderboard"), where("timestamp", ">=", start), orderBy("timestamp", "desc"), limit(100));
     }
 
     const snap = await getDocs(q);
     if (snap.empty) { list.innerHTML = '<p class="muted">No entries yet. Be the first!</p>'; return; }
-
     let rows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     if (filter === "weekly" || filter === "monthly") {
@@ -994,7 +1433,7 @@ async function loadLeaderboard(filter = "alltime") {
     renderLeaderboard(rows, filter);
   } catch (e) {
     console.error("Leaderboard error:", e);
-    list.innerHTML = '<p class="muted">Failed to load. You may need to create a Firestore composite index (see README).</p>';
+    list.innerHTML = '<p class="muted">Failed to load. You may need a Firestore composite index (see console).</p>';
   }
 }
 
@@ -1007,10 +1446,14 @@ function renderLeaderboard(rows, filter) {
     div.className = `lb-row${rank <= 3 ? ` top-${rank}` : ""}`;
     let rankClass = rank === 1 ? "gold" : rank === 2 ? "silver" : rank === 3 ? "bronze" : "";
     let value = "";
-    if (filter === "attempts") value = `${row.totalAttempts ?? 0} attempts`;
+    if (filter === "attempts") value = `${row.totalAttempts ?? 0} att`;
     else if (filter === "level") value = `Lv. ${row.level ?? 1}`;
-    else value = `${row.personalBest ?? row.reactionTime ?? "—"} ms`;
-    const avatar = row.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(row.username || "player")}`;
+    else if (filter === "elo") {
+      const elo = row.elo || 1000;
+      const r = eloRank(elo);
+      value = `${r.symbol} ${elo}`;
+    } else value = `${row.personalBest ?? row.reactionTime ?? "—"} ms`;
+    const avatar = row.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(row.username||"player")}`;
     div.innerHTML = `
       <span class="lb-rank ${rankClass}">#${rank}</span>
       <div class="lb-user">
@@ -1029,9 +1472,7 @@ function renderLeaderboard(rows, filter) {
   });
 }
 
-/* =========================================================
-   NAVIGATION / SECTION SWITCHING
-   ========================================================= */
+/* ========= NAVIGATION ========= */
 function setupNavigation() {
   document.querySelectorAll(".nav-item").forEach(btn => {
     btn.addEventListener("click", async () => {
@@ -1048,21 +1489,25 @@ function setupNavigation() {
   });
 }
 
-/* =========================================================
-   DATA REFRESH
-   ========================================================= */
+/* ========= DATA REFRESH ========= */
 async function refreshUserData() {
   if (!currentUser) return;
   currentUserData = await loadProfile(currentUser.uid);
-  if (currentUserData) {
-    updateDashboard(currentUserData);
-    renderProfile(currentUserData);
-    renderAchievements(currentUserData.achievements || []);
+  if (!currentUserData) return;
+  // ELO migration for existing users
+  if (currentUserData.elo === undefined) {
+    try {
+      await updateDoc(doc(db, "users", currentUser.uid), { elo: 1000, eloPeak: 1000 });
+      currentUserData.elo = 1000;
+      currentUserData.eloPeak = 1000;
+    } catch (e) { console.warn(e); }
   }
+  updateDashboard(currentUserData);
+  renderProfile(currentUserData);
+  renderAchievements(currentUserData.achievements || []);
 }
 
 window.addEventListener("profile-updated", refreshUserData);
-
 window.addEventListener("view-profile", async (e) => {
   const uid = e.detail;
   const data = await loadProfile(uid);
@@ -1073,9 +1518,7 @@ window.addEventListener("view-profile", async (e) => {
   }
 });
 
-/* =========================================================
-   AUTH SCREEN BINDING
-   ========================================================= */
+/* ========= AUTH BINDINGS ========= */
 document.getElementById("tab-login")?.addEventListener("click", () => {
   document.getElementById("tab-login").classList.add("active");
   document.getElementById("tab-signup").classList.remove("active");
@@ -1088,55 +1531,30 @@ document.getElementById("tab-signup")?.addEventListener("click", () => {
   document.getElementById("signup-form").classList.remove("hidden");
   document.getElementById("login-form").classList.add("hidden");
 });
-
 document.getElementById("login-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const err = document.getElementById("auth-error");
-  err.textContent = "";
-  try {
-    await signIn(
-      document.getElementById("login-email").value,
-      document.getElementById("login-password").value
-    );
-  } catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
-});
-
-document.getElementById("signup-form")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const err = document.getElementById("auth-error");
-  err.textContent = "";
-  try {
-    await signUp(
-      document.getElementById("signup-email").value,
-      document.getElementById("signup-password").value,
-      document.getElementById("signup-username").value
-    );
-  } catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
-});
-
-document.getElementById("google-signin")?.addEventListener("click", async () => {
-  const err = document.getElementById("auth-error");
-  err.textContent = "";
-  try { await signInWithGoogle(); }
+  const err = document.getElementById("auth-error"); err.textContent = "";
+  try { await signIn(document.getElementById("login-email").value, document.getElementById("login-password").value); }
   catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
 });
-
-document.getElementById("signout-btn")?.addEventListener("click", async () => {
-  await logOut();
+document.getElementById("signup-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = document.getElementById("auth-error"); err.textContent = "";
+  try { await signUp(document.getElementById("signup-email").value, document.getElementById("signup-password").value, document.getElementById("signup-username").value); }
+  catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
 });
+document.getElementById("google-signin")?.addEventListener("click", async () => {
+  const err = document.getElementById("auth-error"); err.textContent = "";
+  try { await signInWithGoogle(); } catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
+});
+document.getElementById("signout-btn")?.addEventListener("click", async () => { await logOut(); });
 
-/* =========================================================
-   SETTINGS BINDING
-   ========================================================= */
+/* ========= SETTINGS ========= */
 document.getElementById("save-username")?.addEventListener("click", async () => {
   if (!currentUser) return;
-  const errEl = document.getElementById("username-error");
-  errEl.textContent = "";
-  try {
-    await saveUsername(currentUser.uid, document.getElementById("settings-username").value);
-    showToast("Username updated.");
-    await refreshUserData();
-  } catch (ex) { errEl.textContent = ex.message; }
+  const errEl = document.getElementById("username-error"); errEl.textContent = "";
+  try { await saveUsername(currentUser.uid, document.getElementById("settings-username").value); showToast("Username updated."); await refreshUserData(); }
+  catch (ex) { errEl.textContent = ex.message; }
 });
 document.getElementById("save-avatar")?.addEventListener("click", async () => {
   if (!currentUser) return;
@@ -1146,10 +1564,12 @@ document.getElementById("save-avatar")?.addEventListener("click", async () => {
   showToast("Avatar updated.");
   await refreshUserData();
 });
+document.getElementById("setting-sound")?.addEventListener("change", (e) => {
+  localStorage.setItem("at-sound", e.target.checked ? "1" : "0");
+});
+if (localStorage.getItem("at-sound") === "0") document.getElementById("setting-sound").checked = false;
 
-/* =========================================================
-   AUTH STATE HANDLER
-   ========================================================= */
+/* ========= AUTH STATE ========= */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
@@ -1168,8 +1588,6 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("app").classList.add("hidden");
   }
 });
-
-console.log("ALT//TAB loaded. Configure firebaseConfig before testing.");
 </script>
 </body>
 </html>
