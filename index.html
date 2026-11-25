@@ -108,7 +108,11 @@ body::before{
   font-family:var(--mono);
   font-size:1.6rem;font-weight:800;letter-spacing:0.15em;
   text-align:center;color:var(--text);
-  text-shadow:0 0 30px rgba(79,255,136,0.15), 2px 0 0 rgba(196,30,58,0.15), -2px 0 0 rgba(0,194,255,0.15);
+  text-shadow:
+    0 0 40px rgba(79,255,136,0.3),
+    3px 0 0 rgba(196,30,58,0.25),
+    -3px 0 0 rgba(0,194,255,0.25),
+    0 0 80px rgba(79,255,136,0.15);
   margin-bottom:.5rem;
 }
 .logo span{color:var(--crt);text-shadow:0 0 20px var(--crt-glow)}
@@ -246,6 +250,14 @@ body::before{
   background:var(--crt);margin-top:.5rem;
   box-shadow:0 0 10px var(--crt-glow);
 }
+.section-title:hover{
+  animation:titleGlitch .3s steps(2);
+}
+@keyframes titleGlitch{
+  0%{transform:translate(0)}
+  50%{transform:translate(-1px,1px);text-shadow:3px 0 0 rgba(196,30,58,0.3),-3px 0 0 rgba(0,194,255,0.3)}
+  100%{transform:translate(0)}
+}
 .section-sub{
   color:var(--text-muted);font-family:var(--mono);
   font-size:.72rem;letter-spacing:.05em;margin:1rem 0 2rem;
@@ -264,7 +276,10 @@ body::before{
   background:linear-gradient(90deg,transparent,var(--border-bright),transparent);
   opacity:.5;
 }
-.stat-card:hover{border-color:var(--border-bright)}
+.stat-card:hover{
+  border-color:var(--border-bright);
+  box-shadow:inset 0 0 20px rgba(79,255,136,0.05), 0 0 20px rgba(0,0,0,0.5);
+}
 .stat-label{
   font-family:var(--mono);font-size:.65rem;color:var(--text-dim);
   text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;
@@ -312,9 +327,15 @@ body::before{
 }
 .xp-fill{
   height:100%;width:0%;
-  background:linear-gradient(90deg,var(--crt),#7fffff);
+  background:linear-gradient(90deg,var(--crt),#7fffff,var(--crt));
+  background-size:200% 100%;
   box-shadow:0 0 10px var(--crt-glow);
   transition:width .8s ease;
+  animation:xpShimmer 3s linear infinite;
+}
+@keyframes xpShimmer{
+  0%{background-position:0% 0}
+  100%{background-position:200% 0}
 }
 
 /* ==== PLAY SECTION ==== */
@@ -342,9 +363,9 @@ body::before{
   position:relative;
 }
 .monitor-bezel::before{
-  content:'';position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
-  font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;color:#3a4040;
   content:'CRT—4B2 · v1.08';
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;color:#3a4040;
 }
 .monitor-bezel::after{
   content:'';position:absolute;bottom:16px;right:24px;
@@ -368,6 +389,19 @@ body::before{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:8;
   border-radius:14px;
   box-shadow:inset 0 0 120px rgba(0,0,0,0.9),inset 0 0 40px rgba(79,255,136,0.03);
+}
+.monitor-screen::after{
+  content:'';
+  position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(196,30,58,0.03) 100%);
+  mix-blend-mode:screen;
+  animation:redBleed 12s ease-in-out infinite;
+  border-radius:14px;
+}
+@keyframes redBleed{
+  0%,88%,100%{opacity:0}
+  92%{opacity:1}
+  95%{opacity:0.4}
 }
 #game-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
 .screen-scanlines{
@@ -431,7 +465,7 @@ body::before{
   border-radius:50%;
 }
 
-/* ==== REFLECTIONS (in screen) ==== */
+/* ==== REFLECTIONS ==== */
 .reflection{
   position:absolute;bottom:6%;right:6%;
   border-radius:2px;overflow:hidden;
@@ -450,23 +484,29 @@ body::before{
 @keyframes reflectionFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 .reflection-player img{width:100%;height:100%;object-fit:cover}
 .reflection-teacher{
-  width:100px;height:100px;
+  width:130px;height:145px;
   opacity:0;
   border:none;background:transparent;
   filter:none;mix-blend-mode:normal;
-  transform:scale(0.95);
+  transform:scale(0.9) translateY(4px);
   transition:opacity .04s ease,transform .04s ease;
 }
 .reflection-teacher.show{
-  opacity:0.92;
-  transform:scale(1);
-  filter:drop-shadow(0 0 30px rgba(196,30,58,0.85)) drop-shadow(0 0 60px rgba(196,30,58,0.4));
-  animation:teacherShake .06s steps(1) 6;
+  opacity:1;
+  transform:scale(1) translateY(0);
+  filter:drop-shadow(0 0 35px rgba(196,30,58,0.95))
+         drop-shadow(0 0 70px rgba(196,30,58,0.5))
+         drop-shadow(0 0 120px rgba(120,0,10,0.35));
+  animation:teacherShake .05s steps(1) 10, teacherBreathe 1.2s ease-in-out infinite .5s;
 }
 @keyframes teacherShake{0%,100%{transform:translate(0) scale(1)}50%{transform:translate(1px,-1px) scale(1.02)}}
+@keyframes teacherBreathe{
+  0%,100%{transform:scale(1) translateY(0)}
+  50%{transform:scale(1.03) translateY(-2px)}
+}
 .reflection-teacher svg{width:100%;height:100%;display:block}
 
-/* ==== MONITOR STATE EFFECTS ==== */
+/* ==== MONITOR STATE ==== */
 .monitor.signal-firing .monitor-screen{
   animation:screenShake .08s linear 5;
   box-shadow:
@@ -492,13 +532,15 @@ body::before{
 .monitor.flicker{animation:monitorFlicker .4s}
 @keyframes monitorFlicker{0%,100%{opacity:1}10%,30%,50%,70%{opacity:.5}}
 
-/* ==== GAME OVERLAYS ==== */
+/* ==== PLAY BUTTON ==== */
 .game-idle-overlay{
   position:absolute;inset:0;z-index:9;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:radial-gradient(ellipse at center,rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.85) 100%);
   cursor:pointer;transition:opacity .3s;
   border-radius:14px;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
 .game-idle-overlay::before{
   content:'';position:absolute;inset:0;pointer-events:none;
@@ -506,25 +548,43 @@ body::before{
   border-radius:14px;
 }
 .btn-start{
-  font-family:var(--mono);font-size:1.1rem;font-weight:800;
-  letter-spacing:.3em;text-transform:uppercase;
-  padding:1.1rem 3rem;
-  background:transparent;color:var(--crt);
-  border:1px solid var(--crt);
-  cursor:pointer;transition:var(--transition);
-  box-shadow:0 0 20px var(--crt-dim),inset 0 0 20px rgba(79,255,136,0.05);
-  position:relative;z-index:2;
+  font-family:var(--mono);
+  font-size:1.5rem;
+  font-weight:800;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  padding:1.75rem 4.5rem;
+  min-width:280px;
+  min-height:96px;
+  background:rgba(79,255,136,0.03);
+  color:var(--crt);
+  border:2px solid var(--crt);
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+  box-shadow:
+    0 0 30px rgba(79,255,136,0.25),
+    inset 0 0 30px rgba(79,255,136,0.06),
+    0 0 0 1px rgba(0,0,0,0.8);
+  position:relative;
+  z-index:2;
+  border-radius:2px;
+  text-shadow:0 0 12px var(--crt-glow);
+  animation:startPulse 2.2s ease-in-out infinite;
+}
+@keyframes startPulse{
+  0%,100%{box-shadow:0 0 30px rgba(79,255,136,0.25), inset 0 0 30px rgba(79,255,136,0.06);}
+  50%{box-shadow:0 0 55px rgba(79,255,136,0.5), inset 0 0 40px rgba(79,255,136,0.12);}
 }
 .btn-start:hover{
-  background:rgba(79,255,136,0.08);
-  box-shadow:0 0 40px var(--crt-glow),inset 0 0 30px rgba(79,255,136,0.1);
-  text-shadow:0 0 10px var(--crt-glow);
+  background:rgba(79,255,136,0.12);
+  box-shadow:0 0 70px var(--crt-glow), inset 0 0 50px rgba(79,255,136,0.15);
+  transform:scale(1.04);
 }
-.btn-start:active{transform:scale(0.98)}
+.btn-start:active{transform:scale(0.97)}
 .start-hint{
-  font-family:var(--mono);font-size:.7rem;color:var(--text-dim);
-  letter-spacing:.08em;text-transform:uppercase;
-  margin-top:1.5rem;text-align:center;max-width:300px;line-height:1.7;
+  font-family:var(--mono);font-size:.78rem;color:var(--text-dim);
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-top:1.5rem;text-align:center;max-width:320px;line-height:1.7;
   position:relative;z-index:2;
 }
 .start-hint em{color:var(--danger-bright);font-style:normal}
@@ -539,7 +599,7 @@ body::before{
 .status-bar.warning{color:var(--danger-bright);text-shadow:0 0 15px rgba(255,51,68,0.5);animation:statusPulse .5s ease-in-out infinite alternate}
 @keyframes statusPulse{from{opacity:1}to{opacity:0.6}}
 
-/* ==== RESULT SCREEN ==== */
+/* ==== RESULT ==== */
 .result-overlay{
   position:absolute;inset:0;z-index:10;
   background:linear-gradient(180deg,rgba(4,5,6,0.95),rgba(4,5,6,0.98));
@@ -621,7 +681,10 @@ body::before{
   border:1px solid var(--border);border-radius:2px;
   transition:var(--transition);
 }
-.lb-row:hover{border-color:var(--border-bright);background:#0a0f0c}
+.lb-row:hover{
+  border-color:var(--border-bright);background:#0a0f0c;
+  box-shadow:inset 0 0 30px rgba(196,30,58,0.05);
+}
 .lb-row.you{
   border-color:var(--crt);
   background:linear-gradient(90deg,rgba(79,255,136,0.06),transparent);
@@ -894,7 +957,8 @@ body::before{
   .section-title{font-size:1.1rem}
   .result-ms{font-size:2.6rem}
   .reflection-player{width:50px;height:50px}
-  .reflection-teacher{width:70px;height:70px}
+  .reflection-teacher{width:100px;height:115px}
+  .btn-start{font-size:1.15rem;padding:1.4rem 2.5rem;min-width:220px;min-height:80px}
 }
 </style>
 </head>
@@ -978,58 +1042,85 @@ body::before{
                 </div>
 
                 <div class="reflection reflection-teacher" id="reflection-teacher">
-                  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                  <svg viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                      <radialGradient id="tGlow" cx="50%" cy="40%" r="60%">
-                        <stop offset="0%" stop-color="rgba(196,30,58,0.15)"/>
+                      <radialGradient id="tGlow" cx="50%" cy="38%" r="65%">
+                        <stop offset="0%" stop-color="rgba(196,30,58,0.35)"/>
+                        <stop offset="60%" stop-color="rgba(80,8,8,0.15)"/>
                         <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
                       </radialGradient>
-                      <radialGradient id="faceShade" cx="50%" cy="60%" r="65%">
-                        <stop offset="0%" stop-color="#3a2825"/>
-                        <stop offset="60%" stop-color="#1a1010"/>
-                        <stop offset="100%" stop-color="#060404"/>
+                      <radialGradient id="faceShade" cx="50%" cy="55%" r="70%">
+                        <stop offset="0%" stop-color="#2c1c18"/>
+                        <stop offset="45%" stop-color="#120808"/>
+                        <stop offset="100%" stop-color="#030202"/>
                       </radialGradient>
+                      <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#fff"/>
+                        <stop offset="25%" stop-color="#ff5566"/>
+                        <stop offset="70%" stop-color="#c41e3a"/>
+                        <stop offset="100%" stop-color="#4a0808" stop-opacity="0"/>
+                      </radialGradient>
+                      <filter id="softBlur">
+                        <feGaussianBlur stdDeviation="0.8"/>
+                      </filter>
                     </defs>
-                    <circle cx="100" cy="100" r="95" fill="url(#tGlow)"/>
-                    <!-- Body silhouette -->
-                    <ellipse cx="100" cy="185" rx="62" ry="45" fill="#050505"/>
-                    <!-- Shoulders / collar -->
-                    <path d="M 60 175 Q 100 145 140 175 L 145 200 L 55 200 Z" fill="#0a0808"/>
-                    <!-- Neck -->
-                    <rect x="85" y="120" width="30" height="30" fill="#0e0a0a"/>
-                    <!-- Hair mass (dark, pulled back) -->
-                    <ellipse cx="100" cy="60" rx="54" ry="48" fill="#080606"/>
-                    <ellipse cx="100" cy="22" rx="16" ry="14" fill="#080606"/>
-                    <ellipse cx="68" cy="70" rx="8" ry="22" fill="#0a0808"/>
-                    <ellipse cx="132" cy="70" rx="8" ry="22" fill="#0a0808"/>
-                    <!-- Face - shadowed, partially visible -->
-                    <ellipse cx="100" cy="82" rx="38" ry="42" fill="url(#faceShade)"/>
-                    <!-- Deeper shadow over half the face -->
-                    <path d="M 100 40 L 100 124 L 138 82 Q 130 50 100 40 Z" fill="rgba(0,0,0,0.55)"/>
-                    <!-- Forehead wrinkles -->
-                    <path d="M 76 62 Q 100 58 124 62" stroke="#241814" stroke-width="0.8" fill="none" opacity="0.6"/>
-                    <path d="M 78 68 Q 100 65 122 68" stroke="#241814" stroke-width="0.6" fill="none" opacity="0.4"/>
-                    <!-- Glasses -->
-                    <ellipse cx="82" cy="82" rx="13" ry="11" fill="rgba(20,20,25,0.4)" stroke="#2a2020" stroke-width="2"/>
-                    <ellipse cx="118" cy="82" rx="13" ry="11" fill="rgba(20,20,25,0.4)" stroke="#2a2020" stroke-width="2"/>
-                    <line x1="95" y1="82" x2="105" y2="82" stroke="#2a2020" stroke-width="2"/>
-                    <line x1="69" y1="80" x2="62" y2="78" stroke="#2a2020" stroke-width="2"/>
-                    <line x1="131" y1="80" x2="138" y2="78" stroke="#2a2020" stroke-width="2"/>
-                    <!-- Glasses glare -->
-                    <ellipse cx="76" cy="78" rx="3" ry="2" fill="rgba(200,200,220,0.35)"/>
-                    <ellipse cx="112" cy="78" rx="3" ry="2" fill="rgba(200,200,220,0.25)"/>
-                    <!-- Eyes - glowing red points, uneven -->
-                    <circle cx="82" cy="83" r="1.6" fill="#ff2233" opacity="0.9"/>
-                    <circle cx="118" cy="83" r="1.4" fill="#ff2233" opacity="0.9"/>
-                    <circle cx="82" cy="83" r="3" fill="none" stroke="rgba(255,34,51,0.4)" stroke-width="0.5"/>
-                    <!-- Nose line -->
-                    <path d="M 100 88 L 98 102 L 104 102" stroke="#2a2020" stroke-width="1.2" fill="none" opacity="0.8"/>
-                    <!-- Mouth - thin line, slight downturn (stern frown) -->
-                    <path d="M 84 116 Q 100 112 116 116" stroke="#1a0808" stroke-width="2" fill="none"/>
-                    <path d="M 84 116 Q 100 118 116 116" stroke="#3a1a1a" stroke-width="0.8" fill="none"/>
-                    <!-- Subtle cheek shadows -->
-                    <ellipse cx="72" cy="100" rx="6" ry="10" fill="rgba(0,0,0,0.3)"/>
-                    <ellipse cx="128" cy="100" rx="6" ry="10" fill="rgba(0,0,0,0.3)"/>
+
+                    <circle cx="110" cy="110" r="105" fill="url(#tGlow)"/>
+
+                    <path d="M 20 240 Q 30 165 110 150 Q 190 165 200 240 Z" fill="#030202"/>
+                    <path d="M 45 240 Q 55 178 110 162 Q 165 178 175 240 Z" fill="#060303"/>
+                    <path d="M 80 162 Q 110 145 140 162 L 145 200 L 75 200 Z" fill="#050202"/>
+                    <path d="M 95 168 Q 98 185 94 200" stroke="#1a0505" stroke-width="1" fill="none"/>
+                    <path d="M 125 168 Q 122 185 126 200" stroke="#1a0505" stroke-width="1" fill="none"/>
+
+                    <path d="M 30 120 Q 25 40 110 18 Q 195 40 190 120 L 185 165 Q 175 90 110 82 Q 45 90 35 165 Z" fill="#020202"/>
+                    <ellipse cx="110" cy="30" rx="28" ry="22" fill="#020202"/>
+                    <ellipse cx="62" cy="80" rx="14" ry="40" fill="#030202"/>
+                    <ellipse cx="158" cy="80" rx="14" ry="40" fill="#030202"/>
+
+                    <ellipse cx="110" cy="110" rx="52" ry="58" fill="url(#faceShade)"/>
+                    <path d="M 110 52 L 110 168 L 162 110 Q 152 66 110 52 Z" fill="rgba(0,0,0,0.7)"/>
+
+                    <path d="M 74 92 Q 90 86 106 90" stroke="#050202" stroke-width="2.5" fill="none"/>
+                    <path d="M 146 92 Q 130 86 114 90" stroke="#050202" stroke-width="2.5" fill="none"/>
+
+                    <ellipse cx="88" cy="108" rx="20" ry="17" fill="rgba(10,10,15,0.55)" stroke="#2a1c1c" stroke-width="2.5"/>
+                    <ellipse cx="132" cy="108" rx="20" ry="17" fill="rgba(10,10,15,0.55)" stroke="#2a1c1c" stroke-width="2.5"/>
+                    <line x1="108" y1="108" x2="112" y2="108" stroke="#2a1c1c" stroke-width="2"/>
+                    <line x1="68" y1="104" x2="56" y2="100" stroke="#2a1c1c" stroke-width="2"/>
+                    <line x1="152" y1="104" x2="164" y2="100" stroke="#2a1c1c" stroke-width="2"/>
+                    <path d="M 76 98 L 84 106 L 80 116 L 92 118" stroke="#1a0808" stroke-width="1.2" fill="none" opacity="0.9"/>
+                    <path d="M 144 100 L 136 110 L 140 118" stroke="#1a0808" stroke-width="1.2" fill="none" opacity="0.9"/>
+
+                    <ellipse cx="88" cy="110" rx="10" ry="8" fill="rgba(0,0,0,0.9)"/>
+                    <ellipse cx="132" cy="110" rx="10" ry="8" fill="rgba(0,0,0,0.9)"/>
+                    <circle cx="88" cy="110" r="5" fill="url(#eyeGlow)" filter="url(#softBlur)"/>
+                    <circle cx="132" cy="110" r="5" fill="url(#eyeGlow)" filter="url(#softBlur)"/>
+                    <circle cx="88" cy="110" r="1.8" fill="#ffffff"/>
+                    <circle cx="132" cy="110" r="1.8" fill="#ffffff"/>
+
+                    <path d="M 88 118 Q 86 132 84 148" stroke="#4a0808" stroke-width="1.8" fill="none" opacity="0.9"/>
+                    <path d="M 132 118 Q 134 134 136 152" stroke="#4a0808" stroke-width="1.8" fill="none" opacity="0.9"/>
+                    <circle cx="84" cy="148" r="1.6" fill="#c41e3a"/>
+                    <circle cx="136" cy="152" r="1.6" fill="#c41e3a"/>
+
+                    <path d="M 110 118 L 106 138 L 114 138" stroke="#2a1818" stroke-width="1.5" fill="none"/>
+                    <path d="M 108 140 Q 110 143 112 140" stroke="#3a2020" stroke-width="1" fill="none"/>
+
+                    <path d="M 82 152 Q 110 148 138 152 Q 132 172 110 174 Q 88 172 82 152 Z"
+                          fill="#0a0202" stroke="#1a0606" stroke-width="1.2"/>
+                    <path d="M 86 154 L 86 162 L 92 164 L 92 155" fill="#c8c0b0" opacity="0.55"/>
+                    <path d="M 95 153 L 95 165 L 101 167 L 101 154" fill="#c8c0b0" opacity="0.6"/>
+                    <path d="M 104 153 L 104 168 L 110 169 L 110 154" fill="#c8c0b0" opacity="0.65"/>
+                    <path d="M 113 154 L 113 168 L 119 167 L 119 153" fill="#c8c0b0" opacity="0.6"/>
+                    <path d="M 122 153 L 122 165 L 128 163 L 128 154" fill="#c8c0b0" opacity="0.55"/>
+                    <path d="M 131 154 L 131 162 L 136 160 L 136 154" fill="#c8c0b0" opacity="0.5"/>
+                    <path d="M 90 160 Q 110 168 130 160 Q 110 172 90 160 Z" fill="#000"/>
+
+                    <ellipse cx="72" cy="130" rx="8" ry="14" fill="rgba(0,0,0,0.55)"/>
+                    <ellipse cx="148" cy="130" rx="8" ry="14" fill="rgba(0,0,0,0.55)"/>
+
+                    <ellipse cx="110" cy="180" rx="70" ry="30" fill="rgba(0,0,0,0.45)"/>
                   </svg>
                 </div>
 
@@ -1094,9 +1185,10 @@ body::before{
       <h1 class="section-title">Leaderboard</h1>
       <p class="section-sub">The fastest still breathe.</p>
       <div class="lb-filters">
-        <button class="lb-filter active" data-filter="alltime">All-Time</button>
+        <button class="lb-filter active" data-filter="daily">Daily</button>
         <button class="lb-filter" data-filter="weekly">Weekly</button>
         <button class="lb-filter" data-filter="monthly">Monthly</button>
+        <button class="lb-filter" data-filter="alltime">All-Time</button>
         <button class="lb-filter" data-filter="elo">ELO</button>
         <button class="lb-filter" data-filter="attempts">Attempts</button>
         <button class="lb-filter" data-filter="level">Level</button>
@@ -1215,7 +1307,7 @@ const firebaseConfig = {
   messagingSenderId: "974791907183",
   appId: "1:974791907183:web:9ae43bf8747b1c46333a9a"
 };
-  
+
 let auth, db;
 try {
   const app = initializeApp(firebaseConfig);
@@ -1238,7 +1330,6 @@ function showToast(message, type = "info") {
     setTimeout(() => toast.remove(), 300);
   }, 3800);
 }
-
 function setStatus(text, warning = false) {
   const el = document.getElementById("status-bar");
   if (!el) return;
@@ -1294,7 +1385,6 @@ class AudioEngine {
   startAmbience() {
     if (!this.enabled || !this.ctx) return;
     this.stopAmbience();
-    // Low electrical hum
     const osc = this.ctx.createOscillator();
     osc.type = "sine";
     osc.frequency.value = 55;
@@ -1303,7 +1393,6 @@ class AudioEngine {
     osc.connect(g).connect(this.ambience);
     osc.start();
     this.hum = { osc, g };
-    // CRT buzz
     const buzz = this.ctx.createOscillator();
     buzz.type = "sawtooth";
     buzz.frequency.value = 120;
@@ -1333,7 +1422,6 @@ class AudioEngine {
   playScream() {
     if (!this.enabled || !this.ctx) return;
     const now = this.ctx.currentTime;
-    // Layer 1: descending distorted saw
     const osc1 = this.ctx.createOscillator();
     osc1.type = "sawtooth";
     osc1.frequency.setValueAtTime(900, now);
@@ -1350,7 +1438,6 @@ class AudioEngine {
     g1.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
     osc1.connect(dist).connect(g1).connect(this.horror);
     osc1.start(now); osc1.stop(now + 0.55);
-    // Layer 2: noise burst
     const noise = this.ctx.createBufferSource();
     const buffer = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.3, this.ctx.sampleRate);
     const data = buffer.getChannelData(0);
@@ -1409,7 +1496,7 @@ class AudioEngine {
 const audio = new AudioEngine();
 ["click","keydown","touchstart"].forEach(ev => window.addEventListener(ev, () => audio.init(), { once: true, passive: true }));
 
-/* ========= ELO ========= */
+/* ========= ELO (fixed) ========= */
 function eloRank(elo) {
   if (elo >= 2200) return { name: "Grandmaster", cls: "elo-grandmaster", symbol: "♛" };
   if (elo >= 1900) return { name: "Master", cls: "elo-master", symbol: "✧" };
@@ -1420,10 +1507,21 @@ function eloRank(elo) {
   return { name: "Bronze", cls: "elo-bronze", symbol: "◇" };
 }
 function calcEloChange(currentElo, rt) {
-  const targetRT = Math.max(180, 500 - (currentElo - 1000) * 0.15);
-  const delta = Math.round(32 * (targetRT - rt) / 100);
+  const expectedRT = Math.max(150, 550 - (currentElo - 1000) * 0.25);
+  let k;
+  if (currentElo < 1050)      k = 40;
+  else if (currentElo < 1400) k = 32;
+  else if (currentElo < 1650) k = 26;
+  else if (currentElo < 1900) k = 20;
+  else if (currentElo < 2200) k = 16;
+  else                        k = 12;
+  const deviation = (expectedRT - rt) / Math.max(60, expectedRT * 0.3);
+  let delta = Math.round(k * Math.tanh(deviation * 1.2));
+  delta = Math.min(k, Math.max(-Math.round(k * 0.85), delta));
+  if (rt > expectedRT * 2)  delta = -Math.round(k * 0.85);
+  if (rt < expectedRT * 0.5) delta = k;
   const newElo = Math.max(100, currentElo + delta);
-  return { delta, targetRT, newElo: Math.round(newElo) };
+  return { delta, targetRT: Math.round(expectedRT), newElo: Math.round(newElo) };
 }
 function updateEloBadge(el, elo) {
   if (!el) return;
@@ -1587,7 +1685,7 @@ async function createUserProfile(uid, username, email) {
     elo: 1000, eloPeak: 1000, falseStarts: 0,
     equippedTitle: "Beginner", unlockedTitles: ["Beginner"],
     achievements: [], createdAt: serverTimestamp(), lastPlayed: serverTimestamp(),
-    soundEnabled: true
+    soundEnabled: true, personalBestCount: 0, lastMode: null, dailyStreak: 0
   });
 }
 async function signUp(email, password, username) {
@@ -1702,16 +1800,32 @@ async function updatePeriodQuests(uid, period, periodKey, event) {
   }
 }
 
-/* ========= ACHIEVEMENTS ========= */
+/* ========= ACHIEVEMENTS (expanded) ========= */
 const ACHIEVEMENTS = [
-  { id: "first_attempt", name: "First Attempt", desc: "Complete your first attempt", icon: "⊙" },
-  { id: "getting_faster", name: "Getting Faster", desc: "Improve your personal best", icon: "↑" },
-  { id: "speedster", name: "Speedster", desc: "Reach below 400ms", icon: "↯" },
-  { id: "insane_reflexes", name: "Insane Reflexes", desc: "Reach below 250ms", icon: "✦" },
-  { id: "addicted", name: "Addicted", desc: "Complete 1,000 attempts", icon: "◈" },
-  { id: "consistent", name: "Consistent", desc: "Play for 7 consecutive days", icon: "▤" },
-  { id: "top_100", name: "Top 100", desc: "Enter the global top 100", icon: "★" },
-  { id: "champion", name: "Champion", desc: "Reach the top 10", icon: "♛" }
+  { id: "first_attempt",    name: "First Attempt",      desc: "Complete your first attempt",           icon: "⊙" },
+  { id: "getting_faster",   name: "Getting Faster",     desc: "Improve your personal best",            icon: "↑" },
+  { id: "speedster",        name: "Speedster",          desc: "Reach below 400ms",                     icon: "↯" },
+  { id: "insane_reflexes",  name: "Insane Reflexes",    desc: "Reach below 250ms",                     icon: "✦" },
+  { id: "inhuman",          name: "Inhuman",            desc: "Reach below 200ms",                     icon: "♨" },
+  { id: "the_anomaly",      name: "The Anomaly",        desc: "Reach below 150ms",                     icon: "☠" },
+  { id: "addicted",         name: "Addicted",           desc: "Complete 1,000 attempts",               icon: "◈" },
+  { id: "marathon",         name: "Marathon",           desc: "Complete 5,000 attempts",               icon: "⏣" },
+  { id: "consistent",       name: "Consistent",         desc: "Play for 7 consecutive days",           icon: "▤" },
+  { id: "dedicated",        name: "Dedicated",          desc: "Play for 30 consecutive days",          icon: "▦" },
+  { id: "top_100",          name: "Top 100",            desc: "Enter the global top 100",              icon: "★" },
+  { id: "champion",         name: "Champion",           desc: "Reach the top 10",                      icon: "♛" },
+  { id: "untouchable",      name: "Untouchable",        desc: "Reach #1 on any leaderboard",           icon: "☼" },
+  { id: "combo_king",       name: "Combo King",         desc: "10 personal bests total",               icon: "✧" },
+  { id: "night_owl",        name: "Night Owl",          desc: "Play a match between 2–4 AM",           icon: "☾" },
+  { id: "early_bird",       name: "Early Bird",         desc: "Play a match between 5–7 AM",           icon: "☀" },
+  { id: "elo_1500",         name: "Platinum Ascension", desc: "Reach 1500 ELO",                        icon: "✶" },
+  { id: "elo_2000",         name: "Diamond Ascension",  desc: "Reach 2000 ELO",                        icon: "◆" },
+  { id: "elo_2200",         name: "Grandmaster",        desc: "Reach 2200 ELO",                        icon: "♛" },
+  { id: "steady_hands",     name: "Steady Hands",       desc: "Play 100 ranked matches without a false start", icon: "✋" },
+  { id: "comeback",         name: "Comeback King",      desc: "Improve your PB after 7 days away",     icon: "⟲" },
+  { id: "ghost_mode",       name: "Ghost",              desc: "Win a ranked game under 180ms",         icon: "∅" },
+  { id: "level_25",         name: "Elite",              desc: "Reach level 25",                        icon: "△" },
+  { id: "level_50",         name: "Legend",             desc: "Reach level 50",                        icon: "▲" }
 ];
 function renderAchievements(unlockedIds = []) {
   const grid = document.getElementById("achievement-grid");
@@ -1740,18 +1854,42 @@ async function checkAchievements(uid, stats) {
   const toUnlock = [];
   const titlesToUnlock = [];
   const check = (id, cond) => { if (!unlocked.includes(id) && cond) toUnlock.push(id); };
-  check("first_attempt", stats.totalAttempts >= 1);
-  check("getting_faster", stats.isPB && data.totalAttempts > 1);
-  check("speedster", stats.reactionTime < 400);
-  check("insane_reflexes", stats.reactionTime < 250);
-  check("addicted", stats.totalAttempts >= 1000);
+
+  const hour = new Date().getHours();
+  const rt = stats.reactionTime;
+  const elo = data.elo || 1000;
+  const streak = data.dailyStreak || 0;
+
+  check("first_attempt",   stats.totalAttempts >= 1);
+  check("getting_faster",  stats.isPB && data.totalAttempts > 1);
+  check("speedster",       rt < 400);
+  check("insane_reflexes", rt < 250);
+  check("inhuman",         rt < 200);
+  check("the_anomaly",     rt < 150);
+  check("addicted",        stats.totalAttempts >= 1000);
+  check("marathon",        stats.totalAttempts >= 5000);
+  check("consistent",      streak >= 7);
+  check("dedicated",       streak >= 30);
+  check("combo_king",      (data.personalBestCount || 0) >= 10);
+  check("night_owl",       hour >= 2 && hour < 4);
+  check("early_bird",      hour >= 5 && hour < 7);
+  check("elo_1500",        elo >= 1500);
+  check("elo_2000",        elo >= 2000);
+  check("elo_2200",        elo >= 2200);
+  check("level_25",        (data.level || 1) >= 25);
+  check("level_50",        (data.level || 1) >= 50);
+  check("ghost_mode",      rt < 180 && data.lastMode === "ranked");
+  const lastPlayedMs = data.lastPlayed?.toDate?.()?.getTime?.() || Date.now();
+  check("comeback",        stats.isPB && (Date.now() - lastPlayedMs) > 7 * 86400000);
+
   const ckT = (t, cond) => { if (!titles.includes(t) && cond) titlesToUnlock.push(t); };
-  ckT("Quick Fingers", stats.totalAttempts >= 10);
-  ckT("Speed Demon", data.personalBest && data.personalBest < 400);
-  ckT("Lightning", data.personalBest && data.personalBest < 300);
+  ckT("Quick Fingers",     stats.totalAttempts >= 10);
+  ckT("Speed Demon",       data.personalBest && data.personalBest < 400);
+  ckT("Lightning",         data.personalBest && data.personalBest < 300);
   ckT("Unreasonably Fast", data.personalBest && data.personalBest < 200);
-  ckT("Elite", data.level >= 25);
-  ckT("Dedicated", stats.totalAttempts >= 500);
+  ckT("Elite",             data.level >= 25);
+  ckT("Dedicated",         stats.totalAttempts >= 500);
+
   if (toUnlock.length) {
     await updateDoc(ref, { achievements: arrayUnion(...toUnlock) });
     toUnlock.forEach(id => {
@@ -1774,22 +1912,23 @@ function getDifficulty(level) {
   return 4;
 }
 
-/* ========= PLAYABLE MINI-GAME ========= */
+/* ========= IMPROVED MINI-GAME — dodge ALT / TAB ========= */
 class MiniGame {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.running = false;
-    this.player = { x: 0.5, y: 0.85 };
-    this.bullets = [];
-    this.enemies = [];
+    this.player = { x: 0.5, y: 0.88 };
+    this.danger = [];
     this.particles = [];
     this.stars = [];
     this.score = 0;
-    this.lastFire = 0;
-    this.lastEnemy = 0;
+    this.combo = 0;
+    this.bestCombo = 0;
+    this.lastSpawn = 0;
     this.keys = {};
     this.frameId = null;
+    this.shake = 0;
     this.handleKey = this.handleKey.bind(this);
     this.resize = this.resize.bind(this);
     this.loop = this.loop.bind(this);
@@ -1807,7 +1946,12 @@ class MiniGame {
     this.W = rect.width;
     this.H = rect.height;
     this.stars = [];
-    for (let i = 0; i < 50; i++) this.stars.push({ x: Math.random() * this.W, y: Math.random() * this.H, speed: 0.2 + Math.random() * 0.8, size: 0.5 + Math.random() * 1.5 });
+    for (let i = 0; i < 70; i++) this.stars.push({
+      x: Math.random() * this.W,
+      y: Math.random() * this.H,
+      speed: 0.15 + Math.random() * 1.2,
+      size: 0.4 + Math.random() * 1.8
+    });
   }
   handleKey(e) {
     if (!this.running) return;
@@ -1820,12 +1964,13 @@ class MiniGame {
   start() {
     if (this.running) return;
     this.running = true;
-    this.bullets = [];
-    this.enemies = [];
+    this.danger = [];
     this.particles = [];
     this.score = 0;
-    this.lastFire = 0;
-    this.lastEnemy = 0;
+    this.combo = 0;
+    this.bestCombo = 0;
+    this.shake = 0;
+    this.lastSpawn = 0;
     this.player.x = 0.5;
     this.frameId = requestAnimationFrame(this.loop);
   }
@@ -1840,118 +1985,170 @@ class MiniGame {
     this.frameId = requestAnimationFrame(this.loop);
   }
   update(now) {
-    const speed = 0.009;
+    const speed = 0.011 + Math.min(0.008, this.score / 8000);
     if (this.keys["ArrowLeft"] || this.keys["a"] || this.keys["A"]) this.player.x -= speed;
     if (this.keys["ArrowRight"] || this.keys["d"] || this.keys["D"]) this.player.x += speed;
-    this.player.x = Math.max(0.05, Math.min(0.95, this.player.x));
+    this.player.x = Math.max(0.06, Math.min(0.94, this.player.x));
 
-    if (now - this.lastFire > 280) {
-      this.bullets.push({ x: this.player.x, y: this.player.y - 0.02 });
-      this.lastFire = now;
-    }
-    this.bullets.forEach(b => b.y -= 0.012);
-    this.bullets = this.bullets.filter(b => b.y > -0.02);
-
-    if (now - this.lastEnemy > 850) {
-      this.enemies.push({ x: 0.1 + Math.random() * 0.8, y: -0.05, speed: 0.0012 + Math.random() * 0.0009 });
-      this.lastEnemy = now;
-    }
-    this.enemies.forEach(e => e.y += e.speed);
-    this.enemies = this.enemies.filter(e => e.y < 1.05);
-
-    // Bullets vs enemies
-    const newEnemies = [];
-    for (const e of this.enemies) {
-      let hit = false;
-      for (let i = this.bullets.length - 1; i >= 0; i--) {
-        const b = this.bullets[i];
-        if (Math.abs(b.x - e.x) < 0.035 && Math.abs(b.y - e.y) < 0.04) {
-          this.bullets.splice(i, 1);
-          this.score += 10;
-          this.spawnParticles(e.x, e.y, 5);
-          hit = true;
-          break;
-        }
+    const spawnInterval = Math.max(280, 900 - this.score * 0.4);
+    if (now - this.lastSpawn > spawnInterval) {
+      const isTab = Math.random() > 0.5;
+      this.danger.push({
+        x: 0.1 + Math.random() * 0.8,
+        y: -0.06,
+        vy: 0.0012 + Math.random() * 0.0012 + this.score / 200000,
+        label: isTab ? "TAB" : "ALT",
+        rot: (Math.random() - 0.5) * 0.4,
+        dRot: (Math.random() - 0.5) * 0.02
+      });
+      if (Math.random() < 0.15 && this.score > 100) {
+        this.danger.push({
+          x: 0.1 + Math.random() * 0.8,
+          y: -0.15,
+          vy: 0.0012 + Math.random() * 0.0012,
+          label: isTab ? "ALT" : "TAB",
+          rot: (Math.random() - 0.5) * 0.4,
+          dRot: (Math.random() - 0.5) * 0.02
+        });
       }
-      if (!hit) newEnemies.push(e);
+      this.lastSpawn = now;
     }
-    this.enemies = newEnemies;
+    this.danger.forEach(d => { d.y += d.vy; d.rot += d.dRot; });
 
-    // Player collision
-    for (const e of this.enemies) {
-      if (Math.abs(e.x - this.player.x) < 0.045 && Math.abs(e.y - this.player.y) < 0.05) {
-        this.score = 0;
-        this.enemies = [];
-        this.bullets = [];
-        this.spawnParticles(e.x, e.y, 20);
-        break;
+    const kept = [];
+    for (const d of this.danger) {
+      if (d.y > 1.1) {
+        this.score += 5;
+        this.combo++;
+        this.bestCombo = Math.max(this.bestCombo, this.combo);
+        this.spawnParticles(d.x, 1.02, 4, "#4fff88");
+        continue;
       }
+      const dx = Math.abs(d.x - this.player.x);
+      const dy = Math.abs(d.y - this.player.y);
+      if (dx < 0.055 && dy < 0.06) {
+        this.shake = 0.5;
+        this.combo = 0;
+        this.score = Math.max(0, this.score - 20);
+        this.spawnParticles(d.x, d.y, 24, "#c41e3a");
+        audio.playError();
+        continue;
+      }
+      kept.push(d);
     }
+    this.danger = kept;
 
-    this.particles.forEach(p => { p.life -= 0.025; p.x += p.vx; p.y += p.vy; });
+    this.particles.forEach(p => {
+      p.life -= 0.022;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.0002;
+    });
     this.particles = this.particles.filter(p => p.life > 0);
 
     this.stars.forEach(s => {
       s.y += s.speed;
       if (s.y > this.H) { s.y = 0; s.x = Math.random() * this.W; }
     });
+    if (this.shake > 0) this.shake = Math.max(0, this.shake - 0.04);
   }
-  spawnParticles(x, y, count) {
+  spawnParticles(x, y, count, color) {
     for (let i = 0; i < count; i++) {
-      this.particles.push({ x, y, vx: (Math.random() - 0.5) * 0.008, vy: (Math.random() - 0.5) * 0.008, life: 1 });
+      this.particles.push({
+        x, y,
+        vx: (Math.random() - 0.5) * 0.014,
+        vy: (Math.random() - 0.5) * 0.014,
+        life: 1, color
+      });
     }
   }
   draw() {
     const { ctx, W, H } = this;
-    ctx.fillStyle = "#03070a";
+    ctx.save();
+    if (this.shake > 0) {
+      const s = this.shake * 8;
+      ctx.translate((Math.random() - 0.5) * s, (Math.random() - 0.5) * s);
+    }
+    const bg = ctx.createRadialGradient(W/2, H*0.4, 0, W/2, H*0.5, Math.max(W,H)*0.8);
+    bg.addColorStop(0, "#061012");
+    bg.addColorStop(0.6, "#03070a");
+    bg.addColorStop(1, "#000000");
+    ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    // Stars
-    ctx.fillStyle = "rgba(180, 200, 180, 0.25)";
-    this.stars.forEach(s => ctx.fillRect(s.x, s.y, s.size, s.size));
-
-    // Bullets
-    ctx.fillStyle = "#4fff88";
-    ctx.shadowColor = "#4fff88";
-    ctx.shadowBlur = 6;
-    this.bullets.forEach(b => ctx.fillRect(b.x * W - 1, b.y * H - 4, 2, 8));
-
-    // Enemies
-    ctx.fillStyle = "#c41e3a";
-    ctx.shadowColor = "#c41e3a";
-    ctx.shadowBlur = 10;
-    this.enemies.forEach(e => {
-      ctx.beginPath();
-      ctx.arc(e.x * W, e.y * H, 5, 0, Math.PI * 2);
-      ctx.fill();
+    this.stars.forEach(s => {
+      ctx.fillStyle = `rgba(180,220,180,${0.15 + Math.random()*0.15})`;
+      ctx.fillRect(s.x, s.y, s.size, s.size);
     });
 
-    // Player
-    ctx.fillStyle = "#c8c4b8";
-    ctx.shadowColor = "#c8c4b8";
-    ctx.shadowBlur = 8;
+    this.danger.forEach(d => {
+      ctx.save();
+      ctx.translate(d.x * W, d.y * H);
+      ctx.rotate(d.rot);
+      const isTab = d.label === "TAB";
+      ctx.shadowColor = isTab ? "#c41e3a" : "#4fff88";
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = isTab ? "rgba(196,30,58,0.9)" : "rgba(79,255,136,0.9)";
+      const w = isTab ? 34 : 30, h = 24;
+      roundRect(ctx, -w/2, -h/2, w, h, 4); ctx.fill();
+      ctx.strokeStyle = isTab ? "#ff5566" : "#9fffbb";
+      ctx.lineWidth = 1.2;
+      roundRect(ctx, -w/2, -h/2, w, h, 4); ctx.stroke();
+      ctx.fillStyle = "#020a05";
+      ctx.font = "bold 9px 'JetBrains Mono', monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(d.label, 0, 0);
+      ctx.restore();
+    });
+
+    ctx.save();
+    ctx.shadowColor = "#4fff88";
+    ctx.shadowBlur = 14;
     const px = this.player.x * W, py = this.player.y * H;
+    const grad = ctx.createLinearGradient(px, py - 12, px, py + 8);
+    grad.addColorStop(0, "#e8ffe8");
+    grad.addColorStop(1, "#4fff88");
+    ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.moveTo(px, py - 10);
-    ctx.lineTo(px - 8, py + 6);
-    ctx.lineTo(px + 8, py + 6);
+    ctx.moveTo(px, py - 12);
+    ctx.lineTo(px - 10, py + 7);
+    ctx.lineTo(px + 10, py + 7);
     ctx.closePath();
     ctx.fill();
+    ctx.fillStyle = "#c8ffd8";
+    ctx.beginPath();
+    ctx.arc(px, py - 1, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
 
-    // Particles
     this.particles.forEach(p => {
       ctx.globalAlpha = Math.max(0, p.life);
-      ctx.fillStyle = "#4fff88";
-      ctx.fillRect(p.x * W, p.y * H, 2, 2);
+      ctx.fillStyle = p.color || "#4fff88";
+      ctx.fillRect(p.x * W, p.y * H, 2.5, 2.5);
     });
     ctx.globalAlpha = 1;
     ctx.shadowBlur = 0;
 
-    // HUD
-    ctx.fillStyle = "rgba(200, 196, 184, 0.6)";
-    ctx.font = "bold 10px 'JetBrains Mono', monospace";
-    ctx.fillText(`SCORE ${this.score}`, 10, 18);
+    ctx.fillStyle = "rgba(220,216,204,0.85)";
+    ctx.font = "bold 11px 'JetBrains Mono', monospace";
+    ctx.textAlign = "left";
+    ctx.fillText(`SCORE ${this.score}`, 12, 20);
+    if (this.combo > 1) {
+      ctx.fillStyle = "#4fff88";
+      ctx.fillText(`×${this.combo} COMBO`, 12, 36);
+    }
+    ctx.restore();
   }
+}
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
 }
 let miniGame = null;
 
@@ -2001,7 +2198,6 @@ const HORROR_EVENTS = {
   blackout: () => { flashBlackout(220); },
   whisper: () => { audio.playWhisper(); },
   watcher: () => {
-    // Draw a brief shadow figure on canvas
     const canvas = document.getElementById("game-canvas");
     const ctx = canvas.getContext("2d");
     const W = canvas.width, H = canvas.height;
@@ -2015,9 +2211,6 @@ const HORROR_EVENTS = {
     ctx.beginPath();
     ctx.arc(x, y - H * 0.28, W * 0.025, 0, Math.PI * 2);
     ctx.fill();
-    setTimeout(() => {
-      // Canvas continuously redraws in game loop — one-shot
-    }, 80);
     ctx.restore();
   },
   wrong_reflection: () => {
@@ -2042,11 +2235,7 @@ const HORROR_EVENTS = {
     audio.playWhisper();
     setTimeout(() => { t.classList.remove("show"); }, 100);
   },
-  face: () => {
-    // Brief face-like shape via glitch
-    flashGlitch();
-    flashStatic(60, 0.6);
-  }
+  face: () => { flashGlitch(); flashStatic(60, 0.6); }
 };
 function pickEvent(difficulty) {
   const pool = [];
@@ -2078,7 +2267,7 @@ function scheduleHorrorEvents(difficulty) {
   }
 }
 
-/* ========= GAME LOGIC ========= */
+/* ========= GAME STATE ========= */
 let currentUser = null, currentUserData = null;
 let gameState = "idle";
 let signalTime = 0;
@@ -2109,19 +2298,15 @@ function startGame(mode = "ranked") {
   currentMode = mode;
   gameState = "booting";
 
-  // Hide idle overlay
   const idleOverlay = document.getElementById("game-idle-overlay");
   if (idleOverlay) idleOverlay.classList.add("hidden");
-  // Reset result overlay if present
   const oldResult = document.getElementById("game-result-overlay");
   if (oldResult) oldResult.remove();
-  // Reset reflections
   document.getElementById("reflection-player").classList.remove("hidden");
   document.getElementById("reflection-teacher").classList.remove("show");
   const monitor = document.getElementById("monitor");
   monitor.classList.remove("signal-firing", "false-start");
 
-  // Boot sequence
   setStatus("BOOTING");
   audio.init();
   flashStatic(200, 0.5);
@@ -2141,36 +2326,18 @@ function fireSignal() {
   if (gameState !== "waiting") return;
   gameState = "signal";
   clearHorrorEvents();
-
-  // 1. Cut ambience
   audio.stopAmbience();
-
-  // 2. Sharp scream
   audio.playScream();
-
-  // 3. Flash static briefly
   flashStatic(80, 0.8);
-
-  // 4. Brightness spike
   flashBrightness();
-
-  // 5. Show teacher
   const playerRef = document.getElementById("reflection-player");
   const teacherRef = document.getElementById("reflection-teacher");
   if (playerRef) playerRef.classList.add("hidden");
   if (teacherRef) teacherRef.classList.add("show");
-
-  // 6. Monitor shake
   const monitor = document.getElementById("monitor");
   if (monitor) monitor.classList.add("signal-firing");
-
-  // 7. Glitch
   flashGlitch();
-
-  // 8. Start timing IMMEDIATELY
   signalTime = performance.now();
-
-  // 9. Update status
   setStatus("REACT NOW", true);
 }
 
@@ -2187,14 +2354,12 @@ function falseStart(message) {
   flashStatic(250, 0.9);
   flashBlackout(150);
 
-  // Show false start result
   showResultOverlay({
     falseStart: true,
     message: message || "YOU LOOKED TOO SOON.",
     time: null
   });
 
-  // Increment false start count
   if (currentUser) {
     updateDoc(doc(db, "users", currentUser.uid), { falseStarts: increment(1) }).catch(() => {});
   }
@@ -2219,7 +2384,6 @@ async function finishAttempt(rt) {
     audio.playError();
     return;
   }
-
   await saveAttempt(rt);
 }
 
@@ -2250,7 +2414,9 @@ async function saveAttempt(rt) {
       totalAttempts, personalBest: isPB ? rt : data.personalBest,
       averageReaction: newAvg, xp: newXp, level: newLevel,
       elo: newElo, eloPeak: newEloPeak,
-      lastReactionTime: rt, lastPlayed: serverTimestamp()
+      lastReactionTime: rt, lastPlayed: serverTimestamp(),
+      personalBestCount: increment(isPB && data.totalAttempts > 0 ? 1 : 0),
+      lastMode: currentMode
     });
 
     await addDoc(collection(db, "users", currentUser.uid, "attempts"), {
@@ -2288,7 +2454,6 @@ async function saveAttempt(rt) {
 }
 
 function showResultOverlay(data) {
-  // Remove any existing result
   const old = document.getElementById("game-result-overlay");
   if (old) old.remove();
 
@@ -2331,7 +2496,6 @@ function showResultOverlay(data) {
         <button class="btn-ghost btn-sm" id="result-back">Back</button>
       </div>`;
 
-    // Animate counting number
     const el = overlay.querySelector("#result-ms-display");
     const target = data.time;
     const duration = 600;
@@ -2377,7 +2541,14 @@ function resetGame() {
 }
 
 function bindGameUI() {
-  document.getElementById("start-btn")?.addEventListener("click", () => startGame(currentMode));
+  document.getElementById("start-btn")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    startGame(currentMode);
+  });
+  // Whole idle overlay is clickable
+  document.getElementById("game-idle-overlay")?.addEventListener("click", () => {
+    if (gameState === "idle") startGame(currentMode);
+  });
   document.querySelectorAll(".mode-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
@@ -2388,7 +2559,7 @@ function bindGameUI() {
 }
 
 /* ========= LEADERBOARD ========= */
-let currentFilter = "alltime";
+let currentFilter = "daily";
 function initLeaderboard() {
   document.querySelectorAll(".lb-filter").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -2398,9 +2569,10 @@ function initLeaderboard() {
       loadLeaderboard(currentFilter);
     });
   });
+  loadLeaderboard(currentFilter);
 }
 
-async function loadLeaderboard(filter = "alltime") {
+async function loadLeaderboard(filter = "daily") {
   const list = document.getElementById("leaderboard-list");
   if (!list) return;
   list.innerHTML = '<p class="muted">Loading...</p>';
@@ -2413,16 +2585,28 @@ async function loadLeaderboard(filter = "alltime") {
     else {
       const now = new Date();
       let start;
-      if (filter === "weekly") { start = new Date(now); start.setDate(now.getDate() - now.getDay()); start.setHours(0,0,0,0); }
-      else start = new Date(now.getFullYear(), now.getMonth(), 1);
-      q = query(collection(db, "leaderboard"), where("timestamp", ">=", start), orderBy("timestamp", "desc"), limit(100));
+      if (filter === "daily") {
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (filter === "weekly") {
+        start = new Date(now);
+        start.setDate(now.getDate() - now.getDay());
+        start.setHours(0,0,0,0);
+      } else {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+      }
+      q = query(
+        collection(db, "leaderboard"),
+        where("timestamp", ">=", start),
+        orderBy("timestamp", "desc"),
+        limit(200)
+      );
     }
 
     const snap = await getDocs(q);
-    if (snap.empty) { list.innerHTML = '<p class="muted">No entries yet.</p>'; return; }
+    if (snap.empty) { list.innerHTML = '<p class="muted">No entries yet. Be the first.</p>'; return; }
     let rows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-    if (filter === "weekly" || filter === "monthly") {
+    if (filter === "daily" || filter === "weekly" || filter === "monthly") {
       const bestMap = new Map();
       rows.forEach(r => {
         const uid = r.userId;
@@ -2446,7 +2630,7 @@ function renderLeaderboard(rows, filter) {
     const isYou = currentUser && (row.uid === currentUser.uid || row.userId === currentUser.uid);
     const div = document.createElement("div");
     div.className = `lb-row${rank <= 3 ? ` top-${rank}` : ""}${isYou ? " you" : ""}`;
-    let rankClass = rank === 1 ? "gold" : rank === 2 ? "silver" : rank === 3 ? "bronze" : "";
+    const rankClass = rank === 1 ? "gold" : rank === 2 ? "silver" : rank === 3 ? "bronze" : "";
     let value = "";
     if (filter === "attempts") value = `${row.totalAttempts ?? 0}`;
     else if (filter === "level") value = `LV ${row.level ?? 1}`;
@@ -2457,67 +2641,48 @@ function renderLeaderboard(rows, filter) {
       <span class="lb-rank ${rankClass}">#${rank}</span>
       <div class="lb-user">
         <img class="lb-avatar" src="${avatar}" alt="" />
-        <span class="lb-name" data-uid="${row.uid || row.userId}">${row.username || "Unknown"}</span>
+        <span class="lb-name">${row.username || "Unknown"}</span>
         <span class="lb-title">${row.equippedTitle || "Beginner"}</span>
       </div>
-      <span class="lb-value ${filter === 'elo' ? 'elo' : ''}">${value}</span>`;
+      <div class="lb-value ${filter === "elo" ? "elo" : ""}">${value}</div>`;
     list.appendChild(div);
   });
-  list.querySelectorAll(".lb-name").forEach(el => {
-    el.addEventListener("click", () => {
-      const uid = el.dataset.uid;
-      if (uid) window.dispatchEvent(new CustomEvent("view-profile", { detail: uid }));
-    });
-  });
 }
 
-/* ========= NAVIGATION ========= */
-function setupNavigation() {
-  document.querySelectorAll(".nav-item").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const section = btn.dataset.section;
-      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-      document.getElementById(`section-${section}`).classList.add("active");
-      if (section === "leaderboard") loadLeaderboard(currentFilter);
-      if (section === "quests" && currentUser) loadQuests(currentUser.uid);
-      if (section === "achievements" && currentUserData) renderAchievements(currentUserData.achievements || []);
-      if (section === "dashboard" && currentUser) { await refreshUserData(); loadRecentAttempts(currentUser.uid); }
-    });
-  });
-}
-
-/* ========= DATA REFRESH ========= */
-async function refreshUserData() {
-  if (!currentUser) return;
-  currentUserData = await loadProfile(currentUser.uid);
-  if (!currentUserData) return;
-  if (currentUserData.elo === undefined) {
-    try {
-      await updateDoc(doc(db, "users", currentUser.uid), { elo: 1000, eloPeak: 1000, falseStarts: 0 });
-      currentUserData.elo = 1000;
-      currentUserData.eloPeak = 1000;
-      currentUserData.falseStarts = 0;
-    } catch (e) { console.warn(e); }
+/* ========= AUTH FLOW ========= */
+async function loadUserData(uid) {
+  currentUserData = await loadProfile(uid);
+  if (currentUserData) {
+    updateDashboard(currentUserData);
+    renderProfile(currentUserData);
+    renderAchievements(currentUserData.achievements || []);
+    await loadQuests(uid);
+    await loadRecentAttempts(uid);
   }
-  updateDashboard(currentUserData);
-  renderProfile(currentUserData);
-  renderAchievements(currentUserData.achievements || []);
 }
 
-window.addEventListener("profile-updated", refreshUserData);
-window.addEventListener("view-profile", async (e) => {
-  const uid = e.detail;
-  const data = await loadProfile(uid);
-  if (data) {
-    renderProfile(data);
-    document.querySelector('[data-section="profile"]')?.click();
-    showToast(`Viewing ${data.username || "player"}`);
+onAuthStateChanged(auth, async (user) => {
+  const authScreen = document.getElementById("auth-screen");
+  const app = document.getElementById("app");
+  if (user) {
+    currentUser = user;
+    authScreen.classList.add("hidden");
+    app.classList.remove("hidden");
+    initGame(user);
+    initLeaderboard();
+    bindGameUI();
+    await loadUserData(user.uid);
+    loadLeaderboard(currentFilter);
+  } else {
+    currentUser = null;
+    currentUserData = null;
+    authScreen.classList.remove("hidden");
+    app.classList.add("hidden");
+    resetGame();
   }
 });
 
-/* ========= AUTH BINDINGS ========= */
+/* Auth tabs */
 document.getElementById("tab-login")?.addEventListener("click", () => {
   document.getElementById("tab-login").classList.add("active");
   document.getElementById("tab-signup").classList.remove("active");
@@ -2530,100 +2695,155 @@ document.getElementById("tab-signup")?.addEventListener("click", () => {
   document.getElementById("signup-form").classList.remove("hidden");
   document.getElementById("login-form").classList.add("hidden");
 });
+
+/* Login */
 document.getElementById("login-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const err = document.getElementById("auth-error"); err.textContent = "";
-  try { await signIn(document.getElementById("login-email").value, document.getElementById("login-password").value); }
-  catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
+  const err = document.getElementById("auth-error");
+  err.textContent = "";
+  const email = document.getElementById("login-email").value;
+  const pass = document.getElementById("login-password").value;
+  try {
+    await signIn(email, pass);
+  } catch (ex) {
+    err.textContent = ex.message || "Sign-in failed.";
+  }
 });
+
+/* Signup */
 document.getElementById("signup-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const err = document.getElementById("auth-error"); err.textContent = "";
-  try { await signUp(document.getElementById("signup-email").value, document.getElementById("signup-password").value, document.getElementById("signup-username").value); }
-  catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
+  const err = document.getElementById("auth-error");
+  err.textContent = "";
+  const email = document.getElementById("signup-email").value;
+  const pass = document.getElementById("signup-password").value;
+  const username = document.getElementById("signup-username").value;
+  if (pass.length < 6) { err.textContent = "Password must be at least 6 characters."; return; }
+  if (username.trim().length < 3) { err.textContent = "Username must be at least 3 characters."; return; }
+  try {
+    await signUp(email, pass, username);
+  } catch (ex) {
+    err.textContent = ex.message || "Sign-up failed.";
+  }
 });
+
+/* Google */
 document.getElementById("google-signin")?.addEventListener("click", async () => {
-  const err = document.getElementById("auth-error"); err.textContent = "";
-  try { await signInWithGoogle(); } catch (ex) { err.textContent = ex.message.replace("Firebase: ", ""); }
-});
-document.getElementById("signout-btn")?.addEventListener("click", async () => { await logOut(); });
-
-/* ========= SETTINGS BINDINGS ========= */
-document.getElementById("save-username")?.addEventListener("click", async () => {
-  if (!currentUser) return;
-  const errEl = document.getElementById("username-error"); errEl.textContent = "";
-  try { await saveUsername(currentUser.uid, document.getElementById("settings-username").value); showToast("Username updated."); await refreshUserData(); }
-  catch (ex) { errEl.textContent = ex.message; }
-});
-document.getElementById("save-avatar")?.addEventListener("click", async () => {
-  if (!currentUser) return;
-  const url = document.getElementById("settings-avatar").value.trim();
-  if (!url) return;
-  await saveAvatar(currentUser.uid, url);
-  showToast("Avatar updated.");
-  await refreshUserData();
+  const err = document.getElementById("auth-error");
+  err.textContent = "";
+  try {
+    await signInWithGoogle();
+  } catch (ex) {
+    err.textContent = ex.message || "Google sign-in failed.";
+  }
 });
 
-// Audio settings
-document.getElementById("setting-sound")?.addEventListener("change", (e) => {
-  localStorage.setItem("at-sound", e.target.checked ? "1" : "0");
-  audio.enabled = e.target.checked;
-  if (!e.target.checked) audio.stopAmbience();
+/* Sign out */
+document.getElementById("signout-btn")?.addEventListener("click", async () => {
+  try { await logOut(); } catch (e) { console.error(e); }
 });
-if (localStorage.getItem("at-sound") === "0") document.getElementById("setting-sound").checked = false;
 
-["master","ambience","effects","horror"].forEach(key => {
-  const slider = document.getElementById(`vol-${key}`);
-  const label = document.getElementById(`vol-${key}-val`);
-  if (!slider || !label) return;
-  slider.value = Math.round((audio.vol[key] || 0.5) * 100);
-  label.textContent = slider.value;
-  slider.addEventListener("input", () => {
-    const v = parseInt(slider.value) / 100;
-    label.textContent = slider.value;
-    localStorage.setItem(`at-vol-${key}`, v.toString());
-    audio.setVolumes(audio.vol.master, audio.vol.ambience, audio.vol.effects, audio.vol.horror);
-    // Re-apply if key changes
-    if (key === "master") audio.vol.master = v;
-    else if (key === "ambience") audio.vol.ambience = v;
-    else if (key === "effects") audio.vol.effects = v;
-    else if (key === "horror") audio.vol.horror = v;
-    audio.setVolumes(audio.vol.master, audio.vol.ambience, audio.vol.effects, audio.vol.horror);
+/* Navigation */
+document.querySelectorAll(".nav-item").forEach(item => {
+  item.addEventListener("click", () => {
+    const section = item.dataset.section;
+    document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    item.classList.add("active");
+    document.getElementById(`section-${section}`)?.classList.add("active");
   });
 });
 
-/* ========= AUTH STATE ========= */
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    document.getElementById("auth-screen").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-    initGame(user);
-    bindGameUI();
-    initLeaderboard();
-    setupNavigation();
-    await refreshUserData();
-    await loadRecentAttempts(user.uid);
-  } else {
-    currentUser = null;
-    currentUserData = null;
-    document.getElementById("auth-screen").classList.remove("hidden");
-    document.getElementById("app").classList.add("hidden");
+/* Profile updated listener */
+window.addEventListener("profile-updated", async () => {
+  if (currentUser) {
+    currentUserData = await loadProfile(currentUser.uid);
+    if (currentUserData) {
+      updateDashboard(currentUserData);
+      renderProfile(currentUserData);
+      renderAchievements(currentUserData.achievements || []);
+    }
   }
 });
 
-// Periodic ambient CRT flicker on auth screen
-setInterval(() => {
-  if (document.getElementById("auth-screen") && !document.getElementById("auth-screen").classList.contains("hidden")) {
-    if (Math.random() < 0.1) {
-      const card = document.querySelector(".auth-card");
-      if (card) {
-        card.style.filter = "brightness(1.15)";
-        setTimeout(() => { card.style.filter = ""; }, 80);
-      }
-    }
+/* Settings — username */
+document.getElementById("save-username")?.addEventListener("click", async () => {
+  const err = document.getElementById("username-error");
+  err.textContent = "";
+  const val = document.getElementById("settings-username").value;
+  if (!currentUser) return;
+  try {
+    await saveUsername(currentUser.uid, val);
+    showToast("Username updated.");
+    window.dispatchEvent(new CustomEvent("profile-updated"));
+  } catch (ex) {
+    err.textContent = ex.message || "Failed to save.";
   }
-}, 2500);
+});
+
+/* Settings — avatar */
+document.getElementById("save-avatar")?.addEventListener("click", async () => {
+  const val = document.getElementById("settings-avatar").value;
+  if (!currentUser) return;
+  try {
+    await saveAvatar(currentUser.uid, val);
+    showToast("Avatar updated.");
+    window.dispatchEvent(new CustomEvent("profile-updated"));
+  } catch (ex) {
+    showToast("Failed to save avatar.", "error");
+  }
+});
+
+/* Settings — audio */
+function readAudioSettings() {
+  const sound = document.getElementById("setting-sound").checked;
+  audio.enabled = sound;
+  localStorage.setItem("at-sound", sound ? "1" : "0");
+  const vols = {
+    master:   parseInt(document.getElementById("vol-master").value) / 100,
+    ambience: parseInt(document.getElementById("vol-ambience").value) / 100,
+    effects:  parseInt(document.getElementById("vol-effects").value) / 100,
+    horror:   parseInt(document.getElementById("vol-horror").value) / 100
+  };
+  audio.setVolumes(vols.master, vols.ambience, vols.effects, vols.horror);
+  localStorage.setItem("at-vol-master", vols.master);
+  localStorage.setItem("at-vol-ambience", vols.ambience);
+  localStorage.setItem("at-vol-effects", vols.effects);
+  localStorage.setItem("at-vol-horror", vols.horror);
+}
+["setting-sound","vol-master","vol-ambience","vol-effects","vol-horror"].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (id === "setting-sound") el.checked = audio.enabled;
+  el.addEventListener("input", () => {
+    if (id === "vol-master")   document.getElementById("vol-master-val").textContent   = el.value;
+    if (id === "vol-ambience") document.getElementById("vol-ambience-val").textContent = el.value;
+    if (id === "vol-effects")  document.getElementById("vol-effects-val").textContent  = el.value;
+    if (id === "vol-horror")   document.getElementById("vol-horror-val").textContent   = el.value;
+    readAudioSettings();
+  });
+});
+// init slider display from localStorage
+(function initSliders() {
+  const map = { "vol-master":"master", "vol-ambience":"ambience", "vol-effects":"effects", "vol-horror":"horror" };
+  Object.entries(map).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const v = Math.round((audio.vol[key] || 0) * 100);
+    el.value = v;
+    const disp = document.getElementById(id + "-val");
+    if (disp) disp.textContent = v;
+  });
+})();
+
+// Init everything else
+if (document.getElementById("transition-overlay")) {
+  setTimeout(() => {
+    document.getElementById("transition-overlay").classList.add("fade-out");
+    setTimeout(() => document.getElementById("transition-overlay").classList.add("hidden"), 600);
+  }, 600);
+}
+
 </script>
 </body>
 </html>
